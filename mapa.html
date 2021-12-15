@@ -10,10 +10,10 @@
 	<body>
 		<div id="map"></div>
 		<script>
-			d3.csv("data/datos202111.csv", function(data) {
+			d3.csv("data/clima.csv", function(data) {
 			    for (var i = 0; i < data.length; i++) {
-			        console.log(data[i].Provincia);
-			        console.log(data[i].Municipio);
+			        console.log(data[i].ESTACION);
+			        console.log(data[i].ANO);
 			    }
 			});
 		</script>
