@@ -11,15 +11,6 @@
 		<div id="map"></div>
 
 		<script>
-			//data = d3.csv("./data/clima.csv", function(data) {
-		    //    console.log(data);
-			//});
-
-			const data = await d3.csv("./data/clima.csv");
-			//const data = d3.csv("./data/clima.csv");
-
-			alert(data[0])
-
 			var map = L.map('map').setView([40.4165, -3.70256], 13);
 
 			var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -39,11 +30,28 @@
 
 			function renderStations() {
 					// remove old markers
-					stations.forEach(function(s) {
+				stations.forEach(function(s) {
 					s.remove();
 				})
 			
 				stations = [];
+
+				var dataOneDate;
+				d3.csv("./data/clima.csv", function(data) {
+					filteredData = data.filter(function(row)) {
+						return row['DIA'] = 'D01'
+					}
+					dataOneDate = filteredData.map(function(d)) {
+						return {
+							Estacion: d.ESTACION,
+							S02: d.S02
+						}
+					}
+				});
+
+				console.log(dataOneDate);
+
+				//const data = await d3.csv("./data/clima.csv");
 
 				data.features.forEach(function(feature) {
 					var c = L.circleMarker(
@@ -68,7 +76,8 @@
 				});
 			}
 
-			fetchData(initDate);
+			//fetchData(initDate);
+			renderStations();
 
 		</script>
 	</body>
