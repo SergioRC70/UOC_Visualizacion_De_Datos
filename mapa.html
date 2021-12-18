@@ -37,14 +37,14 @@
 				stations = [];
 
 				d3.csv("./data/clima.csv", function(d) {
-					return {
-					    Estacion: d.ESTACION,
-					    S02: d.S02,
-					    Dia: d.DIA,
-					}
-					console.log(d)
+					//return {
+					//    Estacion: d.ESTACION,
+					//    S02: d.S02,
+					//    Dia: d.DIA,
+					//}
+					
 					filteredData = d.filter(function(d) {
-						return d['Dia'] == 'D01';
+						return d['DIA'] == 'D01';
 					});
 					console.log(filteredData);
 				});
