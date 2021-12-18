@@ -43,8 +43,8 @@
 					//    Dia: d.DIA,
 					//}
 					
-					filteredData = data.filter(function(row) {
-						return row;
+					var filteredData = data.filter(function(row) {
+						return row['DIA'] == 'D01';
 					});
 					console.log(filteredData);
 				});
