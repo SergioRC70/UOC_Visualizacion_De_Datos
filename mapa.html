@@ -36,14 +36,14 @@
 			
 				stations = [];
 
-				d3.csv("./data/clima.csv", function(data) {
+				d3.csv("./data/clima.csv").then(function(data) {
 					//return {
 					//    Estacion: d.ESTACION,
 					//    S02: d.S02,
 					//    Dia: d.DIA,
 					//}
 					
-					var filteredData = data.filter(function(row) {
+					var filteredData = data.filter(function(row, i) {
 						return row['DIA'] == 'D01';
 					});
 					console.log(filteredData);
