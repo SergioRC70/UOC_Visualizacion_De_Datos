@@ -50,19 +50,19 @@
 
 				//const data = await d3.csv("./data/clima.csv");
 
-				data.features.forEach(function(feature) {
-					var c = L.circleMarker(
-						[feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
-							radius: radiusScale(feature.properties[currProperty]),
-							// color: colorScale(feature.properties[currProperty]),
-							color: 'black',
-							fillColor: colorScale(feature.properties[currProperty]),
-							fillOpacity: 0.5
-					});
-					c.addTo(theMap);
-					c.bindTooltip('<h3>' + feature.properties.name + '</h3>' + '<b>' + currProperty + ': </b>' + numberFormatter(feature.properties[currProperty]) + '<br>' + properties.filter(d => d.code === currProperty)[0].desc);
-					circles.push(c);
-				});
+				//data.features.forEach(function(feature) {
+				//	var c = L.circleMarker(
+				//		[feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
+				//			radius: radiusScale(feature.properties[currProperty]),
+				//			// color: colorScale(feature.properties[currProperty]),
+				//			color: 'black',
+				//			fillColor: colorScale(feature.properties[currProperty]),
+				//			fillOpacity: 0.5
+				//	});
+				//	c.addTo(theMap);
+				//	c.bindTooltip('<h3>' + feature.properties.name + '</h3>' + '<b>' + currProperty + ': </b>' + numberFormatter(feature.properties[currProperty]) + '<br>' + properties.filter(d => d.code === currProperty)[0].desc);
+				//	circles.push(c);
+				//});
 			}
 
 			function fetchData(dateStr) {
