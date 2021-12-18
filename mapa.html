@@ -38,15 +38,15 @@
 
 				var dataOneDate;
 				d3.csv("./data/clima.csv", function(data) {
-					filteredData = data.filter(function(row)) {
-						return row['DIA'] = 'D01'
-					}
-					dataOneDate = filteredData.map(function(d)) {
+					filteredData = data.filter(function(row) {
+						return row['DIA'] = 'D01';
+					});
+					dataOneDate = filteredData.map(function(d) {
 						return {
 							Estacion: d.ESTACION,
 							S02: d.S02
 						}
-					}
+					});
 				});
 
 				console.log(dataOneDate);
