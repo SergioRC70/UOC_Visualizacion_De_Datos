@@ -73,7 +73,7 @@
 
 					d3.dsv(";", "./data/datos202111.csv").then(function(data) {
 						var filteredData = data.filter(function(row, i) {
-							return row['MES'] == '01';
+							return row.MES == '01' && row.ESTACION == estacion && row.MAGNITUD == '1' ;
 						});
 
 						console.log(filteredData);
