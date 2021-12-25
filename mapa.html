@@ -73,10 +73,10 @@
 
 					d3.dsv(";", "./data/datos202111.csv").then(function(data) {
 						var filteredData = data.filter(function(row, i) {
-							return row['MES'] == '1';
+							return row['MES'] == '01';
 						});
 
-						console.log(data);
+						console.log(filteredData);
 	
 						circle.bindPopup(new L.popup().setContent('<div id="SO2Legend"></div><div id="NO2Legend"></div><div id="PM25Legend"></div><div id="PM10Legend"></div><div id="O3Legend"></div>'));
 					});
