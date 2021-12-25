@@ -60,23 +60,16 @@
 			}).addTo(map);
 
 
-			var circle=L.circle([40.423852,-3.712246], {radius: 200}).addTo(map);
-			circle.bindPopup(new L.popup().setContent('<div id="SO2Legend"></div><div id="NO2Legend"></div><div id="PM25Legend"></div><div id="PM10Legend"></div><div id="O3Legend"></div>'));
+			//var circle=L.circle([40.423852,-3.712246], {radius: 200}).addTo(map);
 
-
-			/* Initialize the SVG layer */
-			//map._initPathRoot()    
-
-			/* We simply pick up the SVG from the map object */
-			//var svg = d3.select("#map").select("svg"),
-			//g = svg.append("g");
 
 			d3.dsv(";", "./data/estaciones_control_aire.csv").then(function(data) {
 				console.log(data[0]);
 				data.forEach(function(d) {
 					var latitud = d['LATITUD'];
 					var longitud = d['LONGITUD'];
-					L.circle([latitud, longitud], {radius: 200}).addTo(map);
+					var circle = L.circle([latitud, longitud], {radius: 200}).addTo(map);
+					circle.bindPopup(new L.popup().setContent('<div id="SO2Legend"></div><div id="NO2Legend"></div><div id="PM25Legend"></div><div id="PM10Legend"></div><div id="O3Legend"></div>'));
 				});
 			});
 
