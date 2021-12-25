@@ -66,18 +66,24 @@
 			d3.dsv(";", "./data/estaciones_control_aire.csv").then(function(data) {
 				console.log(data[0]);
 				data.forEach(function(d) {
-					var latitud = d['LATITUD'];
-					var longitud = d['LONGITUD'];
+					var latitud = d.LATITUD;
+					var longitud = d.LONGITUD;
+					var estacion = d.CODIGO_CORTO;
 					var circle = L.circle([latitud, longitud], {radius: 200}).addTo(map);
-					circle.bindPopup(new L.popup().setContent('<div id="SO2Legend"></div><div id="NO2Legend"></div><div id="PM25Legend"></div><div id="PM10Legend"></div><div id="O3Legend"></div>'));
+
+					d3.dsv(";", "./data/datos202111.csv").then(function(data) {
+						var filteredData = data.filter(function(row, i) {
+							return row.MES == '1' && row.ESTACION == estacion && row.MAGNITUD == '1';
+						});
+
+						console.log(filteredData);
+	
+						circle.bindPopup(new L.popup().setContent('<div id="SO2Legend"></div><div id="NO2Legend"></div><div id="PM25Legend"></div><div id="PM10Legend"></div><div id="O3Legend"></div>'));
+					});
+
 				});
 			});
 
-			d3.csv("./data/clima.csv").then(function(data) {
-				var filteredData = data.filter(function(row, i) {
-					return row['DIA'] == 'D01';
-				});
-			});
 
 
 
