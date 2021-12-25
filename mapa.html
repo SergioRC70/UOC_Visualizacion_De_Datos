@@ -72,10 +72,12 @@
 			//g = svg.append("g");
 
 			d3.csv("./data/estaciones_control_aire.csv").then(function(data) {
-				data.forEach(function(d) {
-					L.circle([d['LATITUD'], d['LONGITUD']], {radius: 200}).addTo(map);
-				});
 				console.log(data[0]);
+				data.forEach(function(d) {
+					var latitud = d['LATITUD'];
+					var longitud = d['LONGITUD'];
+					L.circle([latitud, longitud], {radius: 200}).addTo(map);
+				});
 			});
 
 			d3.csv("./data/clima.csv").then(function(data) {
