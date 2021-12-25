@@ -1,0 +1,251 @@
+---
+title: 'Transforción de datos para visualización'
+author: "Autor: Sergio Romero Córdoba"
+date: "Diciembre 2021"
+output:
+  html_document:
+    highlight: default
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+    toc_depth: 2
+    includes:
+      in_header: 75.584-PRA2-header.html
+  word_document: default
+  pdf_document:
+    highlight: zenburn
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Carga de datos
+
+
+```{r message= FALSE, warning=FALSE}
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(RColorBrewer)
+
+library(arules)
+
+library(fpc)
+library(cluster)
+library(ggfortify)
+library(factoextra)
+
+library(gmodels)
+library(caret)
+library(rpart)
+library(rpart.plot)
+
+```
+
+## Selección del juego de datos
+
+Para el desarrollo de la práctica se ha escogido un conjunto de datos del portal de datos abiertos del Ayuntamiento de Madrid (https://datos.madrid.es/portal/site/egob). Se pretende estudiar la calidad del aire y su relación con los datos meteorológicos, y para ello se han escogido dos conjuntos de datos:
+
+1. Calidad del aire. Datos diarios (https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=aecb88a7e2b73410VgnVCM2000000c205a0aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default). Este conjunto de datos nos da la información de los valores de calidad del aire obtenidos por las 24 estaciones remotas automáticas que recogen la información básica para la vigilancia atmosférica. Los valores diarios se obtienen como una media aritmética de los 24 valores horarios de cada día.
+
+2. Datos meteorológicos. Datos diarios  (https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=8d7357cec5efa610VgnVCM1000001d4a900aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default). Este conjunto de datos nos da la información de las estaciones de control pertenecientes a la red meteorológica municipal.
+
+## Análisis y acondicionado de juego de datos de calidad del aire
+
+Cargamos en primer lugar el conjunto de datos de calidad del aire y vemos su estructura.
+
+```{r message= FALSE, warning=FALSE}
+
+aire <- read.csv("datos202111.csv", header = T, sep = ";")
+str(aire)
+
+```
+
+Cada registro está estructurado de la siguiente forma:
+
+PROVINCIA, MUNICIPIO, ESTACION, MAGNITUD, PUNTO_MUESTREO, ANO, MES, D01, V01, D02, V02...
+
+Donde D01 corresponde al dato del primer día del mes, D02 al del segundo día y así sucesivamente.
+
+Vamos a ver ahora los distintos valores para la columna MAGNITUD. Estos valores nos identifican los distintos datos que se miden en cada una de las estaciones:
+
+```{r message= FALSE, warning=FALSE}
+
+distinct(aire, MAGNITUD)
+
+```
+
+En la definición del conjunto de datos encontramos los tipos de contaminantes que corresponden a cada uno de estos códigos:
+
+```{r table1, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+
+cat("
+| ID    | Nombre contaminante                 | Código  |
+|-------|:------------------------------------|:--------|
+| 01    | Dióxido de Azufre                   | SO2     |
+| 06    | Monóxido de Carbono                 | CO      |
+| 07    | Monóxido de Nitrógeno               | NO      |
+| 08    | Dióxido de Nitrógeno                | NO2     |
+| 09    | Partículas < 2.5 µm                 | PM2.5   |
+| 10    | Partículas < 10 µm                  | PM10    |
+| 12    | Óxidos de Nitrógeno                 | NOx     |
+| 14    | Ozono                               | O3      |
+| 20    | Tolueno                             | TOL     |
+| 30    | Benceno                             | BEN     |
+| 35    | Etilbenceno                         | EBE     |
+| 37    | Metaxileno                          | MXY     |
+| 38    | Paraxileno                          | PXY     |
+| 39    | Ortoxileno                          | OXY     |
+| 42    | Hidrocarburos totales (hexano)      | TCH     |
+| 43    | Metano                              | CH4     |
+| 44    | Hidrocarburos no metánicos (hexano) | NMHC    |
+")
+
+```
+
+Se puede encontrar más detalle de cada uno de los tipos de contaminantes en el portal web de calidad del aire del ayuntamiento de Madrid (http://www.mambiente.madrid.es/opencms/opencms/calaire/ContAtmosferica/Contaminantes/Tipos.html).
+
+El primer paso será reorganizar nuestro dataframe de manera que las distintas magnitudes se muestren como columnas, mientras que los días pasaran a ser filas (cada fila corresponderá a un día).
+
+Además, vamos a eliminar algunas de las columnas:
+
+- Las columnas PROVINCIA, MUNICIPIO y PUNTO_MUESTREO no aportan información ya que se trata para todos los casos de estaciones de Madrid y el punto de muestreo es una combinación de los valores de provincia, municipio y estación.
+
+- Las columnas Vx identifican los valores que han sido validados. Para el objeto de esta práctica, con el fin de trabajar con el mayor número de valores posibles vamos a tomar todos los datos.
+
+```{r message= FALSE, warning=FALSE}
+
+aire <- aire[, -grep("^V", colnames(aire))]
+aire <- subset(aire, select = -c(PROVINCIA, MUNICIPIO, PUNTO_MUESTREO))
+
+aire <- aire %>%
+  gather("DIA", "VALOR", D01:D31) %>%
+  spread(key = MAGNITUD, value = "VALOR")
+
+```
+
+Por último, vamos a quedarnos con un pequeño grupo de contaminantes. Este grupo se ha escogido en base al índice de calidad del aire (ICA) creado por la Agencia Europea de Medio Ambiente (AEMA). El ICA se basa en cinco contaminantes clave que son perjudiciales para la salud de las personas y el medioambiente: partículas en suspensión (PM2,5 y PM10), ozono troposférico (O3), dióxido de nitrógeno (NO2) y dióxido de azufre (SO2). Los detalles sobre el ICA se pueden encontrar en la página web de la AEMA (https://www.eea.europa.eu/es/highlights/indice-europeo-de-calidad-del).
+
+Además, vamos a factorizar los valores de esasa cuatro columnas de acuerdo a los parámetros que establece la AEMA:
+
+```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+
+cat("
+| Contaminante               | Muy bueno | Bueno    | Regular | Malo    | Muy malo |
+|----------------------------|:---------:|---------:|--------:|--------:|---------:|
+| Partículas PM2.5           | 0-10      | 11-20    | 21-25   | 26-50   | 51-800   |
+| Partículas PM10            | 0-20      | 21-35    | 36-50   | 51-100  | 101-1200 |
+| Dióxido de Nitrógeno (NO2) | 0-40      | 41-100   | 101-200 | 201-400 | 401-1000 |
+| Ozono (O3)                 | 0-80      | 81-120   | 121-180 | 181-240 | 241-600  |
+| Dióxido de Azufre (SO2)    | 0-100     | 101-200  | 201-350 | 351-500 | 501-1250 |
+")
+
+```
+
+
+```{r message= FALSE, warning=FALSE}
+
+aire <- aire[,c(1:5, 8:10, 12)]
+
+aire_factors <- aire
+aire_factors$`1_1` <- cut(x = aire_factors$`1`, breaks = c(0, 100, 200, 350, 500, 1250), labels = c("Muy bueno", "Bueno", "Regular", "Malo","Muy malo"), include.lowest = T)
+aire_factors$`8_1` <- cut(x = aire_factors$`8`, breaks = c(0, 40, 100, 200, 400, 1000), labels = c("Muy bueno", "Bueno", "Regular", "Malo","Muy malo"), include.lowest = T)
+aire_factors$`9_1` <- cut(x = aire_factors$`9`, breaks = c(0, 10, 20, 25, 50, 800), labels = c("Muy bueno", "Bueno", "Regular", "Malo","Muy malo"), include.lowest = T)
+aire_factors$`10_1` <- cut(x = aire_factors$`10`, breaks = c(0, 20, 35, 50, 100, 1200), labels = c("Muy bueno", "Bueno", "Regular", "Malo","Muy malo"), include.lowest = T)
+aire_factors$`14_1` <- cut(x = aire_factors$`14`, breaks = c(0, 80, 120, 180, 240, 600), labels = c("Muy bueno", "Bueno", "Regular", "Malo","Muy malo"), include.lowest = T)
+
+summary(aire_factors)
+
+
+```
+
+## Estaciones de control
+
+```{r message= FALSE, warning=FALSE}
+
+estaciones_aire <- read.csv("estaciones_control_aire.csv", header = T, sep = ";")
+str(estaciones_aire)
+
+```
+
+## Análisis y acondicionado de juego de datos meteorológicos
+
+Vamos a cargar ahora el segundo juego de datos correspondiente a datos meteorológicos.
+
+```{r message= FALSE, warning=FALSE}
+
+meteo <- read.csv("meteo19.csv", header = T, sep = ";")
+str(meteo)
+
+```
+
+La estructura es igual que en el caso de los datos de calidad del aire, con los días del mes como columnas.
+
+Vamos también en este caso los distintos valores que existen en la columna de magnitudes:
+
+```{r message= FALSE, warning=FALSE}
+
+distinct(meteo, MAGNITUD)
+
+```
+
+En la definición del conjunto de datos encontramos los datos que corresponden a cada uno de estos códigos:
+
+```{r table3, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+
+cat("
+| ID    | Descripción                |
+|-------|:---------------------------|
+| 80    | RADIACIÓN ULTRAVIOLETA     |
+| 81    | VELOCIDAD VIENTO           |
+| 82    | DIR. DE VIENTO             |
+| 83    | TEMPERATURA                | 
+| 86    | HUMEDAD RELATIVA           |
+| 87    | PRESION BARIOMETRICA       |
+| 88    | RADIACION SOLAR            |
+| 89    | PRECIPITACIÓN              |
+")
+
+```
+
+Vamos a proceder igual que con los datos de calidad del aire, reorganizando el dataframe de manera que las distintas magnitudes se muestren como columnas y los días los pasamos a la filas. Igualmente, eliminamos las columnas MUNICIPIO y PUNTO_MUESTREO las columnas Vx.
+
+```{r message= FALSE, warning=FALSE}
+
+meteo <- meteo[, -grep("^V", colnames(meteo))]
+meteo <- subset(meteo, select = -c(PROVINCIA, MUNICIPIO, PUNTO_MUESTREO))
+
+meteo <- meteo %>%
+  gather("DIA", "VALOR", D01:D31) %>%
+  spread(key = MAGNITUD, value = "VALOR")
+
+summary(meteo)
+
+```
+
+El siguiente paso es unir la información que tenemos en los dos juegos de datos. Se pretende unir para cada estación, tanto la información meteorológica como de calidad del aire. Sin embargo, no todas las estaciones tienen datos de ambos conjuntos y no todas las estaciones disponen de todos los datos.
+
+Para intentar disponer del mayor número de datos posibles, se identifican tres estaciones meteorológicas que sí recogen información para todos los datos y que se encuentran muy próximas a otras tres estaciones que disponen de menos datos (las parejas de estaciones son 102-36, 103-17 y 108-39). La localización de todas las estaciones se puede ver en el portal web de calidad del aire del Ayuntamiento de Madrid.
+
+Además, vamos a eliminar la información de radiación ultravioleta (80) ya que no hay datos en 9207 observaciones de las 9672 de las que disponemos.
+
+## Análisis del juego de datos completo
+
+Una vez que se hacen todas estas transformaciones y se juntan los dos data frames, se van a renombrar las columnas.
+
+```{r message= FALSE, warning=FALSE}
+
+meteo_all_values <- na.omit(meteo[, c(1:4, 6:12)])
+meteo_all_values$ESTACION[meteo_all_values$ESTACION == 102] <- 36
+meteo_all_values$ESTACION[meteo_all_values$ESTACION == 103] <- 17
+meteo_all_values$ESTACION[meteo_all_values$ESTACION == 108] <- 39
+
+df_clima <- inner_join(aire_factors, meteo_all_values, by = c("ESTACION", "ANO", "MES", "DIA"))
+colnames(df_clima) <- c("ESTACION", "ANO", "MES", "DIA", "SO2", "NO2", "PM25", "PM10", "O3", "VEL_VIENTO", "DIR_VIENTO", "TEMPERATURA", "HUMEDAD", "PRESION", "RADIACION", "PRECIPITACION")
+summary(df_clima)
+
+```
+

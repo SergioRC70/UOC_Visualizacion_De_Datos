@@ -2,6 +2,7 @@
 	<head>
  		<link rel="stylesheet" href="leaflet/leaflet.css" />
 		<script src="leaflet/leaflet.js" ></script>
+		<script src="d3_color-legend.js" ></script>
 		<script src="https://d3js.org/d3.v5.min.js"></script>
 	<style>
   		#map { height: 600px; }
@@ -11,7 +12,43 @@
 		<div id="map"></div>
 
 		<script>
-			var map = L.map('map').setView([40.4165, -3.70256], 13);
+			const so2_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
+			  title: "SO2"
+			})
+
+			const no2_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
+			  title: "NO2"
+			})
+
+			const pm25_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
+			  title: "PM 2.5"
+			})
+
+			const pm10_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
+			  title: "PM 10"
+			})
+
+			const o3_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
+			  title: "O3"
+			})
+
+			var map = L.map('map').setView([40.4165, -3.70256], 13).on('popupopen', function () {
+				d3.select("#SO2Legend")
+				  .node()
+				  .appendChild(so2_legend);
+				d3.select("#NO2Legend")
+				  .node()
+				  .appendChild(no2_legend);
+				d3.select("#PM25Legend")
+				  .node()
+				  .appendChild(pm25_legend);
+				d3.select("#PM10Legend")
+				  .node()
+				  .appendChild(pm10_legend);
+				d3.select("#O3Legend")
+				  .node()
+				  .appendChild(o3_legend);
+			});
 
 			var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
 				maxZoom: 18,
@@ -23,59 +60,59 @@
 			}).addTo(map);
 
 
-			var marker=L.marker([40.423852,-3.712246]).addTo(map);
-			marker.bindPopup("<b>Plaza de España</b>");
+			var circle=L.circle([40.423852,-3.712246], {radius: 200}).addTo(map);
+			circle.bindPopup(new L.popup().setContent('<div id="SO2Legend"></div><div id="NO2Legend"></div><div id="PM25Legend"></div><div id="PM10Legend"></div><div id="O3Legend"></div>'));
 
-			var stations = [];
 
-			function renderStations() {
-					// remove old markers
-				stations.forEach(function(s) {
-					s.remove();
+			/* Initialize the SVG layer */
+			map._initPathRoot()    
+
+			/* We simply pick up the SVG from the map object */
+			//var svg = d3.select("#map").select("svg"),
+			//g = svg.append("g");
+
+			d3.csv("./data/estaciones_control_aire.csv").then(function(data) {
+				data.forEach(function(d) {
+					L.circle([d.LATITUD, d.LONGITUD], {radius: 200}).addTo(map);
+				});
+			});
+
+			d3.csv("./data/clima.csv").then(function(data) {
+				var filteredData = data.filter(function(row, i) {
+					return row['DIA'] == 'D01';
+				});
+			});
+
+
+
+			d3.json("circles.json", function(collection) {
+				/* Add a LatLng object to each item in the dataset */
+				collection.objects.forEach(function(d) {
+					d.LatLng = new L.LatLng(d.circle.coordinates[0],
+											d.circle.coordinates[1])
 				})
-			
-				stations = [];
+				
+				var feature = g.selectAll("circle")
+					.data(collection.objects)
+					.enter().append("circle")
+					.style("stroke", "black")  
+					.style("opacity", .6) 
+					.style("fill", "red")
+					.attr("r", 20);  
+				
+				map.on("viewreset", update);
+				update();
 
-				d3.csv("./data/clima.csv").then(function(data) {
-					//return {
-					//    Estacion: d.ESTACION,
-					//    S02: d.S02,
-					//    Dia: d.DIA,
-					//}
-					
-					var filteredData = data.filter(function(row, i) {
-						return row['DIA'] == 'D01';
-					});
-					console.log(filteredData);
-				});
-
-				//const data = await d3.csv("./data/clima.csv");
-
-				//data.features.forEach(function(feature) {
-				//	var c = L.circleMarker(
-				//		[feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
-				//			radius: radiusScale(feature.properties[currProperty]),
-				//			// color: colorScale(feature.properties[currProperty]),
-				//			color: 'black',
-				//			fillColor: colorScale(feature.properties[currProperty]),
-				//			fillOpacity: 0.5
-				//	});
-				//	c.addTo(theMap);
-				//	c.bindTooltip('<h3>' + feature.properties.name + '</h3>' + '<b>' + currProperty + ': </b>' + numberFormatter(feature.properties[currProperty]) + '<br>' + properties.filter(d => d.code === currProperty)[0].desc);
-				//	circles.push(c);
-				//});
-			}
-
-			function fetchData(dateStr) {
-				var url = 'https://xyz.api.here.com/hub/spaces/' + spaceID + '/search?limit=100&access_token=' + accessToken + '&tags=' + dateStr;
-				d3.json(url).then(function(data) {
-					theData = data;
-					renderCircles();
-				});
-			}
-
-			//fetchData(initDate);
-			renderStations();
+				function update() {
+					feature.attr("transform", 
+					function(d) { 
+						return "translate("+ 
+							map.latLngToLayerPoint(d.LatLng).x +","+ 
+							map.latLngToLayerPoint(d.LatLng).y +")";
+						}
+					)
+				}
+			})			
 
 		</script>
 	</body>
