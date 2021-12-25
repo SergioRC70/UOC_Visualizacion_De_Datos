@@ -71,7 +71,7 @@
 			//var svg = d3.select("#map").select("svg"),
 			//g = svg.append("g");
 
-			d3.csv("./data/estaciones_control_aire.csv").then(function(data) {
+			d3.dsv(";", "./data/estaciones_control_aire.csv").then(function(data) {
 				console.log(data[0]);
 				data.forEach(function(d) {
 					var latitud = d['LATITUD'];
