@@ -40,7 +40,7 @@
 
 		<div id="map"></div>
 
-		<div id="overlay">Date: <input type="text" id="datepicker"></div>
+		<div id="overlay">Date: <input type="text" id="datepicker" class="date"></div>
 
 		<script>
 			const so2_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
@@ -102,7 +102,7 @@
 					var longitud = d.LONGITUD;
 					var estacion = d.CODIGO_CORTO;
 					var nom_estacion = d.ESTACION
-					var circle = L.circle([latitud, longitud], {radius: 200}).addTo(map);
+					var circle = L.circle([latitud, longitud], {radius: 200, color: 'green'}).addTo(map);
 
 					d3.dsv(";", "./data/datos202111.csv").then(function(data) {
 						var filteredData = data.filter(function(row, i) {
@@ -204,6 +204,17 @@
 					});
 
 				});
+			});
+
+			$(".date")
+			.datepicker({
+				onSelect: function(dateText) {
+					alert("Selected date: " + dateText + "; input's current value: " + this.value);
+					$(this).change();
+				}
+			})
+			.on("change", function() {
+				alert("Got change event from field");
 			});
 
 		</script>
