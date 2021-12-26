@@ -4,11 +4,18 @@
 
  		<link rel="stylesheet" href="leaflet/leaflet.css" />
 		<script src="leaflet/leaflet.js" ></script>
+
 		<script src="d3_color-legend.js" ></script>
 		<script src="https://d3js.org/d3.v5.min.js"></script>
+
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
 		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 		<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet">
+
 		<script>
 			$( function() {
 				$( "#datepicker" ).datepicker();
@@ -17,6 +24,8 @@
 	<style>
 		body, html {
 			margin: 0;
+			font-family: 'Lato', sans-serif;
+			font-size: 14px;
 		}
 		#map {
 			width: 100%;
@@ -29,10 +38,10 @@
 			right: 30px;
 			margin-left: -300px; 
 			background-color: white; 
-			width: 325px; 
-			height: 300px; 
+			width: 300px; 
 			z-index: 100;
 			padding: 20px;
+			border-radius: 10px;
 		}
 	</style>
 	</head>
@@ -40,7 +49,10 @@
 
 		<div id="map"></div>
 
-		<div id="overlay">Date: <input type="text" id="datepicker" class="date"></div>
+		<div id="overlay">
+			Seleccionar fecha de visualización de los datos.<br/><br/>
+			Fecha:&nbsp;&nbsp;&nbsp;<input type="text" id="datepicker" class="date">
+		</div>
 
 		<script>
 			const so2_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
@@ -94,123 +106,126 @@
 
 			//var circle=L.circle([40.423852,-3.712246], {radius: 200}).addTo(map);
 
+			function renderStations(fecha)
+			{
+				// Cargamos los datos de los ficheros csv. Lo primero es cargar la estaciones de control
+				d3.dsv(";", "./data/estaciones_control_aire.csv").then(function(data) {
+					data.forEach(function(d) {
+						var latitud = d.LATITUD;
+						var longitud = d.LONGITUD;
+						var estacion = d.CODIGO_CORTO;
+						var nom_estacion = d.ESTACION
+						var circle = L.circle([latitud, longitud], {radius: 200, color: 'green'}).addTo(map);
 
-			// Cargamos los datos de los ficheros csv. Lo primero es cargar la estaciones de control
-			d3.dsv(";", "./data/estaciones_control_aire.csv").then(function(data) {
-				data.forEach(function(d) {
-					var latitud = d.LATITUD;
-					var longitud = d.LONGITUD;
-					var estacion = d.CODIGO_CORTO;
-					var nom_estacion = d.ESTACION
-					var circle = L.circle([latitud, longitud], {radius: 200, color: 'green'}).addTo(map);
+						d3.dsv(";", "./data/datos202111.csv").then(function(data) {
+							var filteredData = data.filter(function(row, i) {
+								return row.MES == '01' && row.ESTACION == estacion && (row.MAGNITUD == '1' || row.MAGNITUD == '8' || row.MAGNITUD == '9' || row.MAGNITUD == '10' || row.MAGNITUD == '14');
+							});
 
-					d3.dsv(";", "./data/datos202111.csv").then(function(data) {
-						var filteredData = data.filter(function(row, i) {
-							return row.MES == '01' && row.ESTACION == estacion && (row.MAGNITUD == '1' || row.MAGNITUD == '8' || row.MAGNITUD == '9' || row.MAGNITUD == '10' || row.MAGNITUD == '14');
+							var indice_calidad = 0;
+							var valor_so2 = 0;
+							var valor_no2 = 0;
+							var valor_pm25 = 0;
+							var valor_pm10 = 0;
+							var valor_o3 = 0;
+
+							filteredData.forEach(function(item) {
+								var magnitud = item.MAGNITUD;
+								var valor = item.D01;
+
+								// Dióxido de Azufre SO2
+								if (magnitud == 1) {
+									valor_so2 = valor;
+									if (valor <= 100)
+										indice_calidad = Math.max(indice_calidad, 0);
+									else if (valor <= 200)
+										indice_calidad = Math.max(indice_calidad, 1);
+									else if (valor <= 350)
+										indice_calidad = Math.max(indice_calidad, 2);
+									else if (valor <= 500)
+										indice_calidad = Math.max(indice_calidad, 3);
+									else
+										indice_calidad = 4;
+								}
+
+								// Dióxido de Nitrógeno NO2
+								if (magnitud == 8) {
+									valor_no2 = valor;
+									if (valor <= 40)
+										indice_calidad = Math.max(indice_calidad, 0);
+									else if (valor <= 100)
+										indice_calidad = Math.max(indice_calidad, 1);
+									else if (valor <= 200)
+										indice_calidad = Math.max(indice_calidad, 2);
+									else if (valor <= 400)
+										indice_calidad = Math.max(indice_calidad, 3);
+									else
+										indice_calidad = 4;
+								}
+
+
+								// Partículas < 2.5 µm PM2.5
+								if (magnitud == 9) {
+									valor_pm25 = valor;
+									if (valor <= 10)
+										indice_calidad = Math.max(indice_calidad, 0);
+									else if (valor <= 20)
+										indice_calidad = Math.max(indice_calidad, 1);
+									else if (valor <= 25)
+										indice_calidad = Math.max(indice_calidad, 2);
+									else if (valor <= 50)
+										indice_calidad = Math.max(indice_calidad, 3);
+									else
+										indice_calidad = 4;
+								}
+
+								// Partículas < 10 µm PM10
+								if (magnitud == 10) {
+									valor_pm10 = valor;
+									if (valor <= 20)
+										indice_calidad = Math.max(indice_calidad, 0);
+									else if (valor <= 35)
+										indice_calidad = Math.max(indice_calidad, 1);
+									else if (valor <= 50)
+										indice_calidad = Math.max(indice_calidad, 2);
+									else if (valor <= 100)
+										indice_calidad = Math.max(indice_calidad, 3);
+									else
+										indice_calidad = 4;
+								}
+
+								// Ozono O3
+								if (magnitud == 14) {
+									valor_o3 = valor;
+									if (valor <= 100)
+										indice_calidad = Math.max(indice_calidad, 0);
+									else if (valor <= 200)
+										indice_calidad = Math.max(indice_calidad, 1);
+									else if (valor <= 350)
+										indice_calidad = Math.max(indice_calidad, 2);
+									else if (valor <= 500)
+										indice_calidad = Math.max(indice_calidad, 3);
+									else
+										indice_calidad = 4;
+								}
+
+							});
+
+							//circle.bindPopup(new L.popup().setContent('<div id="SO2Legend"></div><div id="NO2Legend"></div><div id="PM25Legend"></div><div id="PM10Legend"></div><div id="O3Legend"></div>'));
+
+							circle.bindPopup(new L.popup().setContent('<div>' + nom_estacion + '<br/>Indice de calidad: ' + indice_calidad + '<br/>SO2: ' + valor_so2 + '<br/>NO2: ' + valor_no2 + '<br/>PM2.5: ' + valor_pm25 + '<br/>PM10: ' + valor_pm10 + '<br/>O3: ' + valor_o3 + '</div>'));
 						});
 
-						var indice_calidad = 0;
-						var valor_so2 = 0;
-						var valor_no2 = 0;
-						var valor_pm25 = 0;
-						var valor_pm10 = 0;
-						var valor_o3 = 0;
-
-						filteredData.forEach(function(item) {
-							var magnitud = item.MAGNITUD;
-							var valor = item.D01;
-
-							// Dióxido de Azufre SO2
-							if (magnitud == 1) {
-								valor_so2 = valor;
-								if (valor <= 100)
-									indice_calidad = Math.max(indice_calidad, 0);
-								else if (valor <= 200)
-									indice_calidad = Math.max(indice_calidad, 1);
-								else if (valor <= 350)
-									indice_calidad = Math.max(indice_calidad, 2);
-								else if (valor <= 500)
-									indice_calidad = Math.max(indice_calidad, 3);
-								else
-									indice_calidad = 4;
-							}
-
-							// Dióxido de Nitrógeno NO2
-							if (magnitud == 8) {
-								valor_no2 = valor;
-								if (valor <= 40)
-									indice_calidad = Math.max(indice_calidad, 0);
-								else if (valor <= 100)
-									indice_calidad = Math.max(indice_calidad, 1);
-								else if (valor <= 200)
-									indice_calidad = Math.max(indice_calidad, 2);
-								else if (valor <= 400)
-									indice_calidad = Math.max(indice_calidad, 3);
-								else
-									indice_calidad = 4;
-							}
-
-
-							// Partículas < 2.5 µm PM2.5
-							if (magnitud == 9) {
-								valor_pm25 = valor;
-								if (valor <= 10)
-									indice_calidad = Math.max(indice_calidad, 0);
-								else if (valor <= 20)
-									indice_calidad = Math.max(indice_calidad, 1);
-								else if (valor <= 25)
-									indice_calidad = Math.max(indice_calidad, 2);
-								else if (valor <= 50)
-									indice_calidad = Math.max(indice_calidad, 3);
-								else
-									indice_calidad = 4;
-							}
-
-							// Partículas < 10 µm PM10
-							if (magnitud == 10) {
-								valor_pm10 = valor;
-								if (valor <= 20)
-									indice_calidad = Math.max(indice_calidad, 0);
-								else if (valor <= 35)
-									indice_calidad = Math.max(indice_calidad, 1);
-								else if (valor <= 50)
-									indice_calidad = Math.max(indice_calidad, 2);
-								else if (valor <= 100)
-									indice_calidad = Math.max(indice_calidad, 3);
-								else
-									indice_calidad = 4;
-							}
-
-							// Ozono O3
-							if (magnitud == 14) {
-								valor_o3 = valor;
-								if (valor <= 100)
-									indice_calidad = Math.max(indice_calidad, 0);
-								else if (valor <= 200)
-									indice_calidad = Math.max(indice_calidad, 1);
-								else if (valor <= 350)
-									indice_calidad = Math.max(indice_calidad, 2);
-								else if (valor <= 500)
-									indice_calidad = Math.max(indice_calidad, 3);
-								else
-									indice_calidad = 4;
-							}
-
-						});
-
-						//circle.bindPopup(new L.popup().setContent('<div id="SO2Legend"></div><div id="NO2Legend"></div><div id="PM25Legend"></div><div id="PM10Legend"></div><div id="O3Legend"></div>'));
-
-						circle.bindPopup(new L.popup().setContent('<div>' + nom_estacion + '<br/>Indice de calidad: ' + indice_calidad + '<br/>SO2: ' + valor_so2 + '<br/>NO2: ' + valor_no2 + '<br/>PM2.5: ' + valor_pm25 + '<br/>PM10: ' + valor_pm10 + '<br/>O3: ' + valor_o3 + '</div>'));
 					});
-
 				});
-			});
+			}						
 
 			$(".date")
 			.datepicker({
 				onSelect: function(dateText) {
 					alert("Selected date: " + dateText + "; input's current value: " + this.value);
 					$(this).change();
+					renderStations(dateText);
 				}
 			})
 			.on("change", function() {
