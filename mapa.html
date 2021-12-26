@@ -21,37 +21,40 @@
 				$( "#datepicker" ).datepicker();
 			} );
 		</script>
-	<style>
-		body, html {
-			margin: 0;
-			font-family: 'Lato', sans-serif;
-			font-size: 14px;
-		}
-		#map {
-			width: 100%;
-			height: 100%;
-			z-index: 1;
-		}
-		#overlay {
-			position: absolute; 
-			top: 30px;
-			right: 30px;
-			background-color: white; 
-			width: 300px; 
-			z-index: 100;
-			padding: 20px;
-			border-radius: 10px;
-		}
-		#meteo {
-			position: absolute; 
-			top: 160px;
-			right: 30px;
-			background-color: white; 
-			width: 300px; 
-			z-index: 100;
-			padding: 20px;
-			border-radius: 10px;
-		}	</style>
+		<style>
+			body, html {
+				margin: 0;
+				font-family: 'Lato', sans-serif;
+				font-size: 14px;
+			}
+			#map {
+				width: 100%;
+				height: 100%;
+				z-index: 1;
+			}
+			#overlay {
+				position: absolute; 
+				top: 30px;
+				right: 30px;
+				background-color: white; 
+				width: 300px; 
+				z-index: 100;
+				padding: 20px;
+				border-radius: 10px;
+				opacity: 0.9;
+			}
+			#meteo {
+				position: absolute; 
+				top: 160px;
+				right: 30px;
+				background-color: white; 
+				width: 300px; 
+				z-index: 100;
+				padding: 20px;
+				border-radius: 10px;
+				opacity: 0.9;
+			}
+		</style>
 	</head>
 	<body>
 
@@ -248,32 +251,31 @@
 
 							circle.bindPopup(new L.popup().setContent('<div>' + nom_estacion + '<br/>Indice de calidad: ' + indice_calidad + '<br/>SO2: ' + valor_so2 + '<br/>NO2: ' + valor_no2 + '<br/>PM2.5: ' + valor_pm25 + '<br/>PM10: ' + valor_pm10 + '<br/>O3: ' + valor_o3 + '</div>'));
 						});
-
-						// Cargarmos el fichero con los datos meteorológicos para el año seleccionado
-						var file_name = "./data/meteo" + fecha.getFullYear().toString().substr(-2) + ".csv";
-						d3.dsv(";", file_name).then(function(data) {
-							var filteredData = data.filter(function(row, i) {
-								var myMonth = ("0" + (fecha.getMonth() + 1)).slice(-2);
-								return row.MES == myMonth && row.ESTACION == '102' && (row.MAGNITUD == '81' || row.MAGNITUD == '83' || row.MAGNITUD == '89');
-							});
-
-							filteredData.forEach(function(item) {
-								var magnitud = item.MAGNITUD;
-								var myDay = ("0" + fecha.getDate()).slice(-2);
-								var valor = item['D' + myDay];
-
-								if (magnitud == '81')
-									$("#meteo").append("Velocidad del viento: " + valor + "<br/>");
-								else if (magnitud == '83')
-									$("#meteo").append("Temperatura: " + valor + "<br/>");
-								else if (magnitud == '89')
-									$("#meteo").append("Precipitación: " + valor + "<br/>");
-							});
-						});
-
-
 					});
 				});
+
+				// Cargarmos el fichero con los datos meteorológicos para el año seleccionado
+				var file_name = "./data/meteo" + fecha.getFullYear().toString().substr(-2) + ".csv";
+				d3.dsv(";", file_name).then(function(data) {
+					var filteredData = data.filter(function(row, i) {
+						var myMonth = ("0" + (fecha.getMonth() + 1)).slice(-2);
+						return row.MES == myMonth && row.ESTACION == '102' && (row.MAGNITUD == '81' || row.MAGNITUD == '83' || row.MAGNITUD == '89');
+					});
+
+					filteredData.forEach(function(item) {
+						var magnitud = item.MAGNITUD;
+						var myDay = ("0" + fecha.getDate()).slice(-2);
+						var valor = item['D' + myDay];
+
+						if (magnitud == '81')
+							$("#meteo").append("Velocidad del viento: " + valor + "<br/>");
+						else if (magnitud == '83')
+							$("#meteo").append("Temperatura: " + valor + "<br/>");
+						else if (magnitud == '89')
+							$("#meteo").append("Precipitación: " + valor + "<br/>");
+					});
+				});
+
 			}						
 
 			$(".date")
