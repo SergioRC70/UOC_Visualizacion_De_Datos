@@ -134,7 +134,8 @@
 
 							filteredData.forEach(function(item) {
 								var magnitud = item.MAGNITUD;
-								var valor = item.D01;
+								var myDay = ("0" + fecha.getDate()).slice(-2);
+								var valor = item['D' + myDay];
 
 								// Dióxido de Azufre SO2
 								if (magnitud == 1) {
@@ -225,10 +226,10 @@
 
 			$(".date")
 			.datepicker({
-				onSelect: function(dateText) {
+				onSelect: function(dateText, inst) {
 					alert("Selected date: " + dateText + "; input's current value: " + this.value);
 					$(this).change();
-					renderStations(dateText);
+					renderStations(new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
 				}
 			})
 			.on("change", function() {
