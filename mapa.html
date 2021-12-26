@@ -117,9 +117,12 @@
 						var nom_estacion = d.ESTACION
 						var circle = L.circle([latitud, longitud], {radius: 200, color: 'green'}).addTo(map);
 
-						d3.dsv(";", "./data/datos202111.csv").then(function(data) {
+						// Cargarmos el fichero con los datos para el año seleccionado
+						var file_name = "./data/datos" + fecha.getFullYear() + "11.csv";
+						d3.dsv(";", file_name).then(function(data) {
 							var filteredData = data.filter(function(row, i) {
-								return row.MES == '01' && row.ESTACION == estacion && (row.MAGNITUD == '1' || row.MAGNITUD == '8' || row.MAGNITUD == '9' || row.MAGNITUD == '10' || row.MAGNITUD == '14');
+								var myMonth = ("0" + (fecha.getMonth() + 1)).slice(-2);
+								return row.MES == myMonth && row.ESTACION == estacion && (row.MAGNITUD == '1' || row.MAGNITUD == '8' || row.MAGNITUD == '9' || row.MAGNITUD == '10' || row.MAGNITUD == '14');
 							});
 
 							var indice_calidad = 0;
