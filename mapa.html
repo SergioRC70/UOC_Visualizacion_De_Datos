@@ -1,14 +1,26 @@
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
  		<link rel="stylesheet" href="leaflet/leaflet.css" />
 		<script src="leaflet/leaflet.js" ></script>
 		<script src="d3_color-legend.js" ></script>
 		<script src="https://d3js.org/d3.v5.min.js"></script>
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+		<script>
+			$( function() {
+				$( "#datepicker" ).datepicker();
+			} );
+		</script>
 	<style>
-  		#map { height: 600px; }
+  		#map { height: 100%; width: 100%; }
 	</style>
 	</head>
 	<body>
+		<div style="float: right">Date: <input type="text" id="datepicker"></div>
+
 		<div id="map"></div>
 
 		<script>
@@ -69,52 +81,21 @@
 					var latitud = d.LATITUD;
 					var longitud = d.LONGITUD;
 					var estacion = d.CODIGO_CORTO;
+					var nom_estacion = d.ESTACION
 					var circle = L.circle([latitud, longitud], {radius: 200}).addTo(map);
 
 					d3.dsv(";", "./data/datos202111.csv").then(function(data) {
 						var filteredData = data.filter(function(row, i) {
-							return row.MES == '01' && row.ESTACION == estacion && row.MAGNITUD == '1' ;
+							return row.MES == '01' && row.ESTACION == estacion;
 						});
 
-						console.log(filteredData);
-	
-						circle.bindPopup(new L.popup().setContent('<div id="SO2Legend"></div><div id="NO2Legend"></div><div id="PM25Legend"></div><div id="PM10Legend"></div><div id="O3Legend"></div>'));
+						//circle.bindPopup(new L.popup().setContent('<div id="SO2Legend"></div><div id="NO2Legend"></div><div id="PM25Legend"></div><div id="PM10Legend"></div><div id="O3Legend"></div>'));
+
+						circle.bindPopup(new L.popup().setContent('<div>' + nom_estacion + '</div>')
 					});
 
 				});
 			});
-
-
-
-
-			/*d3.json("circles.json", function(collection) {
-				/* Add a LatLng object to each item in the dataset */
-			/*	collection.objects.forEach(function(d) {
-					d.LatLng = new L.LatLng(d.circle.coordinates[0],
-											d.circle.coordinates[1])
-				})
-				
-				var feature = g.selectAll("circle")
-					.data(collection.objects)
-					.enter().append("circle")
-					.style("stroke", "black")  
-					.style("opacity", .6) 
-					.style("fill", "red")
-					.attr("r", 20);  
-				
-				map.on("viewreset", update);
-				update();
-
-				function update() {
-					feature.attr("transform", 
-					function(d) { 
-						return "translate("+ 
-							map.latLngToLayerPoint(d.LatLng).x +","+ 
-							map.latLngToLayerPoint(d.LatLng).y +")";
-						}
-					)
-				}
-			})			*/
 
 		</script>
 	</body>
