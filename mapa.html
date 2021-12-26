@@ -15,13 +15,32 @@
 			} );
 		</script>
 	<style>
-  		#map { height: 100%; width: 100%; }
+		body, html {
+			margin: 0;
+		}
+		#map {
+			width: 100%;
+			height: 100%;
+			z-index: 1;
+		}
+		#overlay {
+			position: absolute; 
+			top: 30px;
+			right: 30px;
+			margin-left: -300px; 
+			background-color: white; 
+			width: 325px; 
+			height: 300px; 
+			z-index: 100;
+			padding: 20px;
+		}
 	</style>
 	</head>
 	<body>
-		<div style="float: right">Date: <input type="text" id="datepicker"></div>
 
 		<div id="map"></div>
+
+		<div id="overlay">Date: <input type="text" id="datepicker"></div>
 
 		<script>
 			const so2_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
@@ -44,7 +63,7 @@
 			  title: "O3"
 			})
 
-			var map = L.map('map').setView([40.4165, -3.70256], 13).on('popupopen', function () {
+			var map = L.map('map').setView([40.4265, -3.67256], 13).on('popupopen', function () {
 				d3.select("#SO2Legend")
 				  .node()
 				  .appendChild(so2_legend);
@@ -62,6 +81,7 @@
 				  .appendChild(o3_legend);
 			});
 
+			// Creamos el mapa con leaflet
 			var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
 				maxZoom: 18,
 				attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
@@ -75,8 +95,8 @@
 			//var circle=L.circle([40.423852,-3.712246], {radius: 200}).addTo(map);
 
 
+			// Cargamos los datos de los ficheros csv. Lo primero es cargar la estaciones de control
 			d3.dsv(";", "./data/estaciones_control_aire.csv").then(function(data) {
-				console.log(data[0]);
 				data.forEach(function(d) {
 					var latitud = d.LATITUD;
 					var longitud = d.LONGITUD;
