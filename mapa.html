@@ -115,7 +115,6 @@
 				id: 'mapbox/streets-v11',
 				tileSize: 512,
 				zoomOffset: -1,
-				opacity: 0.7
 			}).addTo(map);
 
 
@@ -248,7 +247,7 @@
 									colorCircle = "#7d2181";
 									break;
 							} 
-							var circle = L.circle([latitud, longitud], {radius: 200, color: colorCircle, opacity: 1}).addTo(map);
+							var circle = L.circle([latitud, longitud], {radius: 200, color: colorCircle, opacity: 1, fillOpacity: 0.8}).addTo(map);
 
 							circle.bindPopup(new L.popup().setContent('<div>' + nom_estacion + '<br/>Indice de calidad: ' + indice_calidad + '<br/>SO2: ' + valor_so2 + '<br/>NO2: ' + valor_no2 + '<br/>PM2.5: ' + valor_pm25 + '<br/>PM10: ' + valor_pm10 + '<br/>O3: ' + valor_o3 + '</div>'));
 						});
