@@ -1,0 +1,33 @@
+body, html {
+	margin: 0;
+	font-family: 'Lato', sans-serif;
+	font-size: 14px;
+}
+#map {
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+#overlay {
+	position: absolute; 
+	top: 30px;
+	right: 30px;
+	background-color: white; 
+	width: 300px; 
+	z-index: 100;
+	padding: 20px;
+	border-radius: 10px;
+	opacity: 0.9;
+}
+#meteo {
+	position: absolute; 
+	top: 160px;
+	right: 30px;
+	background-color: white; 
+	width: 300px; 
+	z-index: 100;
+	padding: 20px;
+	border-radius: 10px;
+	opacity: 0.9;
+	visibility: hidden;
+}

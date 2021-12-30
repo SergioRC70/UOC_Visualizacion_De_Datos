@@ -1,0 +1,182 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<link rel="stylesheet" href="mapstyle.css">
+ 		
+ 		<link rel="stylesheet" href="leaflet/leaflet.css" />
+		<script src="leaflet/leaflet.js" ></script>
+
+		<script src="d3_color-legend.js" ></script>
+		<script src="renderStations.js" ></script>
+		<script src="https://d3js.org/d3.v5.min.js"></script>
+
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet">
+
+		<script>
+			// Añadimos el datepicker a la capa de selección de día
+			$( function() {
+				$( "#datepicker" ).datepicker();
+			} );
+		</script>
+	</head>
+	<body>
+		<div id="map"></div>
+
+		<div id="overlay">
+			Seleccionar fecha de visualización de los datos.<br/><br/>
+			Fecha:&nbsp;&nbsp;&nbsp;<input type="text" id="datepicker" class="date">
+		</div>
+
+		<div id="meteo">
+		</div>
+
+		<script>
+			var circles = [];
+
+			const so2_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
+			  title: "SO2"
+			})
+
+			const no2_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
+			  title: "NO2"
+			})
+
+			const pm25_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
+			  title: "PM 2.5"
+			})
+
+			const pm10_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
+			  title: "PM 10"
+			})
+
+			const o3_legend = Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
+			  title: "O3"
+			})
+
+			var map = L.map('map').setView([40.4265, -3.67256], 13).on('popupopen', function () {
+				d3.select("#SO2Legend")
+				  .node()
+				  .appendChild(so2_legend);
+				d3.select("#NO2Legend")
+				  .node()
+				  .appendChild(no2_legend);
+				d3.select("#PM25Legend")
+				  .node()
+				  .appendChild(pm25_legend);
+				d3.select("#PM10Legend")
+				  .node()
+				  .appendChild(pm10_legend);
+				d3.select("#O3Legend")
+				  .node()
+				  .appendChild(o3_legend);
+			});
+
+			// Creamos el mapa con leaflet
+			var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+				maxZoom: 18,
+				attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+					'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+				id: 'mapbox/streets-v11',
+				tileSize: 512,
+				zoomOffset: -1,
+			}).addTo(map);
+
+
+			//var circle=L.circle([40.423852,-3.712246], {radius: 200}).addTo(map);
+
+						
+
+			$(".date")
+			.datepicker({
+				onSelect: function(dateText, inst) {
+					$(this).change();
+					renderStations(new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
+				}
+			})
+			.on("change", function() {
+			});
+
+		</script>
+
+
+
+<script>
+
+// set the dimensions and margins of the graph
+const margin = {top: 10, right: 40, bottom: 90, left: 20},
+    width = 340 - margin.left - margin.right,
+    height = 250 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+const svg = d3.select("#meteo")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+// Parse the Data
+//d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv").then( function(data) {
+d3.dsv(";", "./data/meteo21.csv").then(function(data) {
+
+var filteredData = data.filter(function(row, i) {
+	return row.MES == '07' && row.ESTACION == '102' && row.MAGNITUD == '83';
+});
+
+var nest = [];
+var keys = ['D01','D02','D03','D04','D05','D06','D07','D08','D09','D10','D11','D11','D12','D13','D14','D15','D16','D17','D18','D19','D20','D21','D22','D23','D24','D25','D26','D27','D28','D29','D30','D31'];
+keys.forEach(function (item) {
+	var valor = filteredData[0][item];
+	var obj = {
+		key: item,
+		value: valor
+	}
+	nest.push(obj);
+})
+
+
+var x = d3.scaleBand()
+  .range([ 0, width ])
+  .domain(nest.map(function(d) { return d.key; }))
+  .padding(0.1);
+svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x).tickFormat(""))
+  .selectAll("text")
+    //.attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, 50])
+  .range([ height, 0]);
+svg.append("g")
+  .call(d3.axisLeft(y));
+
+// Bars
+svg.selectAll("mybar")
+  .data(nest)
+  .enter()
+  .append("rect")
+    .attr("x", function(d) { return x(d.key); })
+    .attr("y", function(d) { return y(d.value); })
+    .attr("width", x.bandwidth())
+    .attr("height", function(d) { return height - y(d.value); })
+    .attr("fill", "#69b3a2")
+
+})
+
+</script>
+
+
+
+
+	</body>
+</html>
