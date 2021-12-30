@@ -143,7 +143,7 @@ function renderStations(fecha)
 
 	// Cargarmos el fichero con los datos meteorológicos para el año seleccionado
 	var file_name = "./data/meteo" + fecha.getFullYear().toString().substr(-2) + ".csv";
-	$(#meteo).empty();
+	$("#meteo").empty();
 	d3.dsv(";", file_name).then(function(data) {
 		var filteredData = data.filter(function(row, i) {
 			var myMonth = ("0" + (fecha.getMonth() + 1)).slice(-2);
