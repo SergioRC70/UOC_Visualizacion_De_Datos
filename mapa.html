@@ -319,7 +319,7 @@ var filteredData = data.filter(function(row, i) {
 
 var nets = [];
 var keys = ['D01','D02','D03','D04'];
-keys.forEach(function (d, i) {
+keys.forEach(function (d, i, filteredData) {
 	var valor = filteredData[0].item[d]
 	var obj = {
 		key: d,
