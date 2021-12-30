@@ -162,6 +162,6 @@ function renderStations(fecha)
 				$("#meteo").append("Precipitación: " + valor + "<br/>");
 		});
 
-		$("#meteo").show(1000);
+		$("#meteo").slideDown(1000);
 	});
 }
