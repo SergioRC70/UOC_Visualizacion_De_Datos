@@ -171,14 +171,14 @@ function renderStations(fecha)
 				$("#meteo").append("<b>Precipitación:</b> " + valor + "<br/>");
 		});
 
-		renderTempMonth();
+		renderTempMonth(myMonth);
 
 		$("#meteo").slideDown(1000);
 	});
 }
 
 
-function renderTempMonth() {
+function renderTempMonth(mes) {
 	$("#meteo").append("<br/><br/><b>Temperatura a lo largo del mes:</b><br/><br/>");
 
 	// set the dimensions and margins of the graph
@@ -199,7 +199,7 @@ function renderTempMonth() {
 	d3.dsv(";", "./data/meteo21.csv").then(function(data) {
 
 	var filteredData = data.filter(function(row, i) {
-		return row.MES == '07' && row.ESTACION == '102' && row.MAGNITUD == '83';
+		return row.MES == mes && row.ESTACION == '102' && row.MAGNITUD == '83';
 	});
 
 	var nest = [];
