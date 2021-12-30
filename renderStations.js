@@ -179,7 +179,7 @@ function renderStations(fecha)
 
 
 function renderTempMonth() {
-	$("#meteo").append("<b>Temperatura a lo largo del mes:</b><br/><br/>");
+	$("#meteo").append("<br/><br/><b>Temperatura a lo largo del mes:</b><br/><br/>");
 
 	// set the dimensions and margins of the graph
 	const margin = {top: 10, right: 40, bottom: 90, left: 20},
