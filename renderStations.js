@@ -115,26 +115,32 @@ function renderStations(fecha)
 				});
 
 				var colorCircle = "#6f6f6f";
+				var aqi_text = "";
 				switch (indice_calidad) {
 					case 0:
 						colorCircle = "#50f0e6";
+						aqi_text = "Muy bueno";
 						break;
 					case 1:
 						colorCircle = "#50ccaa";
+						aqi_text = "Bueno";
 						break;
 					case 2:
 						colorCircle = "#f0e641";
+						aqi_text = "Regular";
 						break;
 					case 3:
 						colorCircle = "#ff5050";
+						aqi_text = "Malo";
 						break;
 					case 4:
 						colorCircle = "#7d2181";
+						aqi_text = "Muy malo";
 						break;
 				} 
 				var circle = L.circle([latitud, longitud], {radius: 200, color: colorCircle, opacity: 1, fillOpacity: 0.6}).addTo(map);
 
-				circle.bindPopup(new L.popup().setContent('<div><b>' + nom_estacion + '</b><br/><b>Indice de calidad:</b> ' + indice_calidad + '<br/><b>SO2:</b> ' + valor_so2 + '<br/><b>NO2:</b> ' + valor_no2 + '<br/><b>PM2.5:</b> ' + valor_pm25 + '<br/><b>PM10:</b> ' + valor_pm10 + '<br/><b>O3:</b> ' + valor_o3 + '</div>'));
+				circle.bindPopup(new L.popup().setContent('<div><b>' + nom_estacion + '</b><br/><b>Indice de calidad:</b> ' + aqi_text + '<br/><b>SO2:</b> ' + valor_so2 + '<br/><b>NO2:</b> ' + valor_no2 + '<br/><b>PM2.5:</b> ' + valor_pm25 + '<br/><b>PM10:</b> ' + valor_pm10 + '<br/><b>O3:</b> ' + valor_o3 + '</div>'));
 
 				circles.push(circle);
 			});
