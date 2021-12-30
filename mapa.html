@@ -314,7 +314,7 @@ const svg = d3.select("#meteo")
 d3.dsv(";", "./data/meteo21.csv").then(function(data) {
 
 var filteredData = data.filter(function(row, i) {
-	return row.MES == '01' && row.ESTACION == '102' && row.MAGNITUD == '83';
+	return row.MES == '07' && row.ESTACION == '102' && row.MAGNITUD == '83';
 });
 
 var nest = [];
