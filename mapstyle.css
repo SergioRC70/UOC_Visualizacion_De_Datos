@@ -29,5 +29,5 @@ body, html {
 	padding: 20px;
 	border-radius: 10px;
 	opacity: 0.9;
-	visibility: hidden;
+	display: none;
 }
