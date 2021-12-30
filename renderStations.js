@@ -134,7 +134,7 @@ function renderStations(fecha)
 				} 
 				var circle = L.circle([latitud, longitud], {radius: 200, color: colorCircle, opacity: 1, fillOpacity: 0.6}).addTo(map);
 
-				circle.bindPopup(new L.popup().setContent('<div>' + nom_estacion + '<br/>Indice de calidad: ' + indice_calidad + '<br/>SO2: ' + valor_so2 + '<br/>NO2: ' + valor_no2 + '<br/>PM2.5: ' + valor_pm25 + '<br/>PM10: ' + valor_pm10 + '<br/>O3: ' + valor_o3 + '</div>'));
+				circle.bindPopup(new L.popup().setContent('<div><b>' + nom_estacion + '</b><br/><b>Indice de calidad:</b> ' + indice_calidad + '<br/><b>SO2:</b> ' + valor_so2 + '<br/><b>NO2:</b> ' + valor_no2 + '<br/><b>PM2.5:</b> ' + valor_pm25 + '<br/><b>PM10:</b> ' + valor_pm10 + '<br/><b>O3:</b> ' + valor_o3 + '</div>'));
 
 				circles.push(circle);
 			});
@@ -158,11 +158,11 @@ function renderStations(fecha)
 			var valor = item['D' + myDay];
 
 			if (magnitud == '81')
-				$("#meteo").append("Velocidad del viento: " + valor + "<br/>");
+				$("#meteo").append("<b>Velocidad del viento:</b> " + valor + "<br/>");
 			else if (magnitud == '83')
-				$("#meteo").append("Temperatura: " + valor + "<br/>");
+				$("#meteo").append("<b>Temperatura:</b> " + valor + "<br/>");
 			else if (magnitud == '89')
-				$("#meteo").append("Precipitación: " + valor + "<br/>");
+				$("#meteo").append("<b>Precipitación:</b> " + valor + "<br/>");
 		});
 
 		renderTempMonth();
@@ -173,6 +173,8 @@ function renderStations(fecha)
 
 
 function renderTempMonth() {
+	$("#meteo").append("<b>Temperatura a lo largo del mes:</b><br/><br/>");
+
 	// set the dimensions and margins of the graph
 	const margin = {top: 10, right: 40, bottom: 90, left: 20},
 	    width = 340 - margin.left - margin.right,
