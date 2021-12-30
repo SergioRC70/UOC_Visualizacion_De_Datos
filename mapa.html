@@ -317,7 +317,7 @@ var filteredData = data.filter(function(row, i) {
 	return row.MES == '01' && row.ESTACION == '102' && row.MAGNITUD == '89';
 });
 
-var nets = [];
+var nest = [];
 var keys = ['D01','D02','D03','D04'];
 keys.forEach(function (item) {
 	var valor = filteredData[0][item];
