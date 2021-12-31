@@ -18,7 +18,7 @@ function renderStations(fecha)
 			var nom_estacion = d.ESTACION
 
 			// Cargarmos el fichero con los datos para el año seleccionado
-			var file_name = "./data/datos" + fecha.getFullYear() + "11.csv";
+			var file_name = "./data/datos" + fecha.getFullYear() + "12.csv";
 			d3.dsv(";", file_name).then(function(data) {
 				var filteredData = data.filter(function(row, i) {
 					var myMonth = ("0" + (fecha.getMonth() + 1)).slice(-2);
