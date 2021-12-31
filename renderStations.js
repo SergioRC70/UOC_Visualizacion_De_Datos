@@ -140,7 +140,7 @@ function renderStations(fecha)
 				} 
 				var circle = L.circle([latitud, longitud], {radius: 200, color: colorCircle, opacity: 1, fillOpacity: 0.6}).addTo(map);
 
-				circle.bindPopup(new L.popup().setContent('<div class="circlePopup"><b>' + nom_estacion + '</b><br/><b>Indice de calidad:</b> ' + aqi_text + '<br/><b>SO2:</b> ' + valor_so2 + '<br/><b>NO2:</b> ' + valor_no2 + '<br/><b>PM2.5:</b> ' + valor_pm25 + '<br/><b>PM10:</b> ' + valor_pm10 + '<br/><b>O3:</b> ' + valor_o3 + '</div>'));
+				circle.bindPopup(new L.popup().setContent('<div class="circlePopup"><b>' + nom_estacion + '</b><br/><b>Indice de calidad:</b> ' + aqi_text + '<br/><b>Di&oacute;xido de Azufre (SO<sub>2</sub>):</b> ' + valor_so2 + '&nbsp;&#956;g/m<sup>3</sup><br/><b>Di&oacute;xido de Nitr&oacute;geno (NO<sub>2</sub>):</b> ' + valor_no2 + '&nbsp;&#956;g/m<sup>3</sup><br/><b>Part&iacute;culas &lt; 2.5 &#956;m (PM2.5):</b> ' + valor_pm25 + '&nbsp;&#956;g/m<sup>3</sup><br/><b>Part&iacute;culas &lt; 10 &#956;m (PM10):</b> ' + valor_pm10 + '&nbsp;&#956;g/m<sup>3</sup><br/><b>Ozono (O<sub>3</sub>):</b> ' + valor_o3 + '&nbsp;&#956;g/m<sup>3</sup></div>'));
 
 				circles.push(circle);
 			});
