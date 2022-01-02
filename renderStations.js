@@ -199,20 +199,35 @@ function renderTempMonth(mes) {
 	d3.dsv(";", "./data/meteo21.csv").then(function(data) {
 
 	var filteredData = data.filter(function(row, i) {
-		return row.MES == mes && row.ESTACION == '102' && row.MAGNITUD == '83';
+		return row.MES == mes && row.ESTACION == '102' && (row.MAGNITUD == '83' || row.MAGNITUD == '89');
 	});
 
+	var nestTemp = [];
+	var nestPrec = [];
 	var nest = [];
 	var keys = ['D01','D02','D03','D04','D05','D06','D07','D08','D09','D10','D11','D11','D12','D13','D14','D15','D16','D17','D18','D19','D20','D21','D22','D23','D24','D25','D26','D27','D28','D29','D30','D31'];
-	keys.forEach(function (item) {
-		var valor = filteredData[0][item];
-		var obj = {
-			key: item,
-			value: valor
-		}
-		nest.push(obj);
-	})
+	filteredData.forEach(function(d) {
+		if (d.MAGNITUD == '83')
+			keys.forEach(function (item) {
+				var valor = d[item];
+				var obj = {
+					key: item,
+					value: valor
+				}
+				nestTemp.push(obj);
+			})
+		else if (item.MAGNITUD == '89')
+			keys.forEach(function (item) {
+				var valor = d[item];
+				var obj = {
+					key: item,
+					precipitacion: valor
+				}
+				nestPrec.push(obj);
+			})
+	});
 
+	nest = nestTemp.map((item, i) => Object.assign({}, item, nestPrec[i]));
 
 	var x = d3.scaleBand()
 	  .range([ 0, width ])
