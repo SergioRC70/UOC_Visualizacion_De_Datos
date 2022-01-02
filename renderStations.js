@@ -362,6 +362,6 @@ y2Axis = g => g
 	    .attr("width", x.bandwidth())
 	    .attr("height", function(d) { return height - y(d.value); })
 	    .attr("fill", "#69b3a2")
-
-	}) */
+*/
+	}) 
 }
