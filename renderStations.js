@@ -233,7 +233,7 @@ function renderTempMonth(mes) {
 
 
 
-chart = {
+//chart = {
   const svg = d3.select("#meteo").append("svg")
       .attr("viewBox", [0, 0, width, height]);
 
@@ -280,7 +280,7 @@ ${d.efficiency.toLocaleString("en")} mpg average fuel efficiency`);
       .call(y2Axis);
 
   return svg.node();
-}
+//}
 
 
 line = d3.line()
