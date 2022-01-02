@@ -187,12 +187,12 @@ function renderTempMonth(mes) {
 	    height = 250 - margin.top - margin.bottom;
 
 	// append the svg object to the body of the page
-	const svg = d3.select("#meteo")
+/*	const svg = d3.select("#meteo")
 	  .append("svg")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
-	    .attr("transform", `translate(${margin.left},${margin.top})`);
+	    .attr("transform", `translate(${margin.left},${margin.top})`);*/
 
 	// Parse the Data
 	//d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv").then( function(data) {
@@ -229,7 +229,112 @@ function renderTempMonth(mes) {
 
 	nest = nestTemp.map((item, i) => Object.assign({}, item, nestPrec[i]));
 
-	var x = d3.scaleBand()
+
+
+
+
+chart = {
+  const svg = d3.select("#meteo").append("svg")
+      .attr("viewBox", [0, 0, width, height]);
+
+  svg.append("g")
+      .attr("fill", "steelblue")
+      .attr("fill-opacity", 0.8)
+    .selectAll("rect")
+    .data(data)
+    .join("rect")
+      .attr("x", d => x(d.year))
+      .attr("width", x.bandwidth())
+      .attr("y", d => y1(d.sales))
+      .attr("height", d => y1(0) - y1(d.sales));
+
+  svg.append("path")
+      .attr("fill", "none")
+      .attr("stroke", "currentColor")
+      .attr("stroke-miterlimit", 1)
+      .attr("stroke-width", 3)
+      .attr("d", line(data));
+
+  svg.append("g")
+      .attr("fill", "none")
+      .attr("pointer-events", "all")
+    .selectAll("rect")
+    .data(data)
+    .join("rect")
+      .attr("x", d => x(d.year))
+      .attr("width", x.bandwidth())
+      .attr("y", 0)
+      .attr("height", height)
+    .append("title")
+      .text(d => `${d.year}
+${d.sales.toLocaleString("en")} new cars sold
+${d.efficiency.toLocaleString("en")} mpg average fuel efficiency`);
+
+  svg.append("g")
+      .call(xAxis);
+
+  svg.append("g")
+      .call(y1Axis);
+
+  svg.append("g")
+      .call(y2Axis);
+
+  return svg.node();
+}
+
+
+line = d3.line()
+    .x(d => x(d.key) + x.bandwidth() / 2)
+    .y(d => y2(d.value))
+
+x = d3.scaleBand()
+    .domain(data.map(d => d.key))
+    .rangeRound([margin.left, width - margin.right])
+    .padding(0.1)
+
+y1 = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d.precipitacion)])
+    .rangeRound([height - margin.bottom, margin.top])
+
+y2 = d3.scaleLinear()
+    .domain(d3.extent(data, d => d.value))
+    .rangeRound([height - margin.bottom, margin.top])
+
+xAxis = g => g
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x)
+        .tickValues(d3.ticks(...d3.extent(x.domain()), width / 40).filter(v => x(v) !== undefined))
+        .tickSizeOuter(0))
+
+y1Axis = g => g
+    .attr("transform", `translate(${margin.left},0)`)
+    .style("color", "steelblue")
+    .call(d3.axisLeft(y1).ticks(null, "s"))
+    .call(g => g.select(".domain").remove())
+    .call(g => g.append("text")
+        .attr("x", -margin.left)
+        .attr("y", 10)
+        .attr("fill", "currentColor")
+        .attr("text-anchor", "start")
+        .text(data.y1))
+
+y2Axis = g => g
+    .attr("transform", `translate(${width - margin.right},0)`)
+    .call(d3.axisRight(y2))
+    .call(g => g.select(".domain").remove())
+    .call(g => g.append("text")
+        .attr("x", margin.right)
+        .attr("y", 10)
+        .attr("fill", "currentColor")
+        .attr("text-anchor", "end")
+        .text(data.y2))
+
+
+
+
+
+
+/*	var x = d3.scaleBand()
 	  .range([ 0, width ])
 	  .domain(nest.map(function(d) { return d.key; }))
 	  .padding(0.1);
@@ -258,5 +363,5 @@ function renderTempMonth(mes) {
 	    .attr("height", function(d) { return height - y(d.value); })
 	    .attr("fill", "#69b3a2")
 
-	})
+	}) */
 }
