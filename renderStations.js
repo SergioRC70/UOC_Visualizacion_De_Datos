@@ -216,7 +216,7 @@ function renderTempMonth(mes) {
 				}
 				nestTemp.push(obj);
 			})
-		else if (item.MAGNITUD == '89')
+		else if (d.MAGNITUD == '89')
 			keys.forEach(function (item) {
 				var valor = d[item];
 				var obj = {
