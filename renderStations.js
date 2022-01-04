@@ -243,10 +243,10 @@ function renderTempMonth(mes) {
     .selectAll("rect")
     .data(data)
     .join("rect")
-      .attr("x", d => x(d.year))
+      .attr("x", d => x(d.key))
       .attr("width", x.bandwidth())
-      .attr("y", d => y1(d.sales))
-      .attr("height", d => y1(0) - y1(d.sales));
+      .attr("y", d => y1(d.value))
+      .attr("height", d => y1(0) - y1(d.value));
 
   svg.append("path")
       .attr("fill", "none")
@@ -261,12 +261,12 @@ function renderTempMonth(mes) {
     .selectAll("rect")
     .data(data)
     .join("rect")
-      .attr("x", d => x(d.year))
+      .attr("x", d => x(d.key))
       .attr("width", x.bandwidth())
       .attr("y", 0)
       .attr("height", height)
     .append("title")
-      .text(d => `${d.year}
+      .text(d => `${d.key}
 ${d.sales.toLocaleString("en")} new cars sold
 ${d.efficiency.toLocaleString("en")} mpg average fuel efficiency`);
 
