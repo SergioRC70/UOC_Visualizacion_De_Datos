@@ -243,10 +243,10 @@ function renderTempMonth(mes) {
     .selectAll("rect")
     .data(data)
     .join("rect")
-      .attr("x", d => x(d.key))
+      .attr("x", d => x(nest.key))
       .attr("width", x.bandwidth())
-      .attr("y", d => y1(d.value))
-      .attr("height", d => y1(0) - y1(d.value));
+      .attr("y", d => y1(nest.value))
+      .attr("height", d => y1(0) - y1(nest.value));
 
   svg.append("path")
       .attr("fill", "none")
@@ -261,14 +261,14 @@ function renderTempMonth(mes) {
     .selectAll("rect")
     .data(data)
     .join("rect")
-      .attr("x", d => x(d.key))
+      .attr("x", d => x(nest.key))
       .attr("width", x.bandwidth())
       .attr("y", 0)
       .attr("height", height)
     .append("title")
-      .text(d => `${d.key}
-${d.sales.toLocaleString("en")} new cars sold
-${d.efficiency.toLocaleString("en")} mpg average fuel efficiency`);
+      .text(d => `${nest.key}
+${nest.precipitacion.toLocaleString("en")} new cars sold
+${nest.value.toLocaleString("en")} mpg average fuel efficiency`);
 
   svg.append("g")
       .call(xAxis);
@@ -284,20 +284,20 @@ ${d.efficiency.toLocaleString("en")} mpg average fuel efficiency`);
 
 
 line = d3.line()
-    .x(d => x(d.key) + x.bandwidth() / 2)
-    .y(d => y2(d.value))
+    .x(d => x(nest.key) + x.bandwidth() / 2)
+    .y(d => y2(nest.value))
 
 x = d3.scaleBand()
-    .domain(data.map(d => d.key))
+    .domain(data.map(d => nest.key))
     .rangeRound([margin.left, width - margin.right])
     .padding(0.1)
 
 y1 = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.precipitacion)])
+    .domain([0, d3.max(data, d => nest.precipitacion)])
     .rangeRound([height - margin.bottom, margin.top])
 
 y2 = d3.scaleLinear()
-    .domain(d3.extent(data, d => d.value))
+    .domain(d3.extent(data, d => nest.value))
     .rangeRound([height - margin.bottom, margin.top])
 
 xAxis = g => g
