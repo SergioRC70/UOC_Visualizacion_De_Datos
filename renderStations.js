@@ -233,56 +233,6 @@ function renderTempMonth(mes) {
 
 
 
-//chart = {
-  const svg = d3.select("#meteo").append("svg")
-      .attr("viewBox", [0, 0, width, height]);
-
-  svg.append("g")
-      .attr("fill", "steelblue")
-      .attr("fill-opacity", 0.8)
-    .selectAll("rect")
-    .data(data)
-    .join("rect")
-      .attr("x", d => x(nest.key))
-      .attr("width", x.bandwidth())
-      .attr("y", d => y1(nest.value))
-      .attr("height", d => y1(0) - y1(nest.value));
-
-  svg.append("path")
-      .attr("fill", "none")
-      .attr("stroke", "currentColor")
-      .attr("stroke-miterlimit", 1)
-      .attr("stroke-width", 3)
-      .attr("d", line(data));
-
-  svg.append("g")
-      .attr("fill", "none")
-      .attr("pointer-events", "all")
-    .selectAll("rect")
-    .data(data)
-    .join("rect")
-      .attr("x", d => x(nest.key))
-      .attr("width", x.bandwidth())
-      .attr("y", 0)
-      .attr("height", height)
-    .append("title")
-      .text(d => `${nest.key}
-${nest.precipitacion.toLocaleString("en")} new cars sold
-${nest.value.toLocaleString("en")} mpg average fuel efficiency`);
-
-  svg.append("g")
-      .call(xAxis);
-
-  svg.append("g")
-      .call(y1Axis);
-
-  svg.append("g")
-      .call(y2Axis);
-
-  return svg.node();
-//}
-
-
 line = d3.line()
     .x(d => x(nest.key) + x.bandwidth() / 2)
     .y(d => y2(nest.value))
@@ -331,7 +281,54 @@ y2Axis = g => g
 
 
 
+//chart = {
+  const svg = d3.select("#meteo").append("svg")
+      .attr("viewBox", [0, 0, width, height]);
 
+  svg.append("g")
+      .attr("fill", "steelblue")
+      .attr("fill-opacity", 0.8)
+    .selectAll("rect")
+    .data(data)
+    .join("rect")
+      .attr("x", d => x(nest.key))
+      .attr("width", x.bandwidth())
+      .attr("y", d => y1(nest.value))
+      .attr("height", d => y1(0) - y1(nest.value));
+
+  svg.append("path")
+      .attr("fill", "none")
+      .attr("stroke", "currentColor")
+      .attr("stroke-miterlimit", 1)
+      .attr("stroke-width", 3)
+      .attr("d", line(data));
+
+  svg.append("g")
+      .attr("fill", "none")
+      .attr("pointer-events", "all")
+    .selectAll("rect")
+    .data(data)
+    .join("rect")
+      .attr("x", d => x(nest.key))
+      .attr("width", x.bandwidth())
+      .attr("y", 0)
+      .attr("height", height)
+    .append("title")
+      .text(d => `${nest.key}
+${nest.precipitacion.toLocaleString("en")} new cars sold
+${nest.value.toLocaleString("en")} mpg average fuel efficiency`);
+
+  svg.append("g")
+      .call(xAxis);
+
+  svg.append("g")
+      .call(y1Axis);
+
+  svg.append("g")
+      .call(y2Axis);
+
+  return svg.node();
+//}
 
 
 /*	var x = d3.scaleBand()
