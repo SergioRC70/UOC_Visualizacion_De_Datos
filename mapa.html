@@ -24,6 +24,11 @@
 			$( function() {
 				$( "#datepicker" ).datepicker({ dateFormat: 'dd-mm-yy' });
 			} );
+
+			$('#datepicker').on('click', function(e) {
+				e.preventDefault();
+				$(this).attr("autocomplete", "off");  
+			});
 		</script>
 	</head>
 	<body>
