@@ -315,8 +315,8 @@ y2Axis = g => g
       .attr("height", height)
     .append("title")
       .text(d => `${nest.key}
-${nest.precipitacion.toLocaleString("en")} new cars sold
-${nest.value.toLocaleString("en")} mpg average fuel efficiency`);
+//${nest.precipitacion.toLocaleString("en")} new cars sold
+//${nest.value.toLocaleString("en")} mpg average fuel efficiency`);
 
   svg.append("g")
       .call(xAxis);
