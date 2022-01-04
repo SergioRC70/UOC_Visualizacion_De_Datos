@@ -331,7 +331,7 @@ y2Axis = g => g
 
 /*	
 /*${nest.precipitacion.toLocaleString("en")} new cars sold
-${nest.value.toLocaleString("en")} mpg average fuel efficiency`);*/
+${nest.value.toLocaleString("en")} mpg average fuel efficiency`);
 
 
 var x = d3.scaleBand()
