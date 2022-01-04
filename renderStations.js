@@ -315,8 +315,6 @@ y2Axis = g => g
       .attr("height", height)
     .append("title")
       .text(d => `${nest.key}
-//${nest.precipitacion.toLocaleString("en")} new cars sold
-//${nest.value.toLocaleString("en")} mpg average fuel efficiency`);
 
   svg.append("g")
       .call(xAxis);
@@ -331,7 +329,12 @@ y2Axis = g => g
 //}
 
 
-/*	var x = d3.scaleBand()
+/*	
+/*${nest.precipitacion.toLocaleString("en")} new cars sold
+${nest.value.toLocaleString("en")} mpg average fuel efficiency`);*/
+
+
+var x = d3.scaleBand()
 	  .range([ 0, width ])
 	  .domain(nest.map(function(d) { return d.key; }))
 	  .padding(0.1);
