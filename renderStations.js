@@ -179,7 +179,7 @@ function renderStations(fecha)
 
 
 function renderTempMonth(mes) {
-	$("#meteo").append("<br/><br/><b>Temperatura a lo largo del mes:</b><br/><br/>");
+	$("#meteo").append("<br/><br/><b>Temperatura y precipiationes a lo largo del mes:</b><br/><br/>");
 
 	// set the dimensions and margins of the graph
 	const margin = {top: 10, right: 60, bottom: 90, left: 20},
@@ -248,7 +248,7 @@ function renderTempMonth(mes) {
 	  .call(d3.axisLeft(y));
 
 	var y2 = d3.scaleLinear()
-	  .domain([0, 35])
+	  .domain([0, 25])
 	  .range([height, 0]);
 	svg.append("g")
 	  .attr("transform", "translate(" + width + " ,0)")
@@ -262,7 +262,7 @@ function renderTempMonth(mes) {
 	    .attr("x", function(d) { return x(d.key); })
 	    .attr("y", function(d) { return y(d.value); })
 	    .attr("width", x.bandwidth())
-	    .attr("height", function(d) { return height - y(d.value); })
+	    .attr("height", function(d) { return height - y(d.precipitacion); })
 	    .attr("fill", "#69b3a2")
 
     // Add the line
