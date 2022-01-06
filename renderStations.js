@@ -32,6 +32,7 @@ function renderStations(fecha)
 				var valor_pm10 = "No disponible";
 				var valor_o3 = "No disponible";
 
+				// Para cada coponente, guardamos su valor y actualizamos el índice de calidad del aire
 				filteredData.forEach(function(item) {
 					var magnitud = item.MAGNITUD;
 					var myDay = ("0" + fecha.getDate()).slice(-2);
