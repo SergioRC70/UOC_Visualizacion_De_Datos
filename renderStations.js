@@ -265,13 +265,16 @@ function renderTempMonth(mes) {
 	    .attr("height", function(d) { return height - y(d.value); })
 	    .attr("fill", "#69b3a2")
 
-	svg.append("path")
-	  .attr("fill", "none")
-	  .attr("stroke", "currentColor")
-	  .attr("stroke-miterlimit", 1)
-	  .attr("stroke-width", 3)
-      .attr("x", function(d) { return x(d.key); })
-      .attr("y", function(d) { return y(d.precipitacion); })
+	svg.selectAll("mybar")
+	  .data(nest)
+	  .enter()
+	  .append("path")
+	    .attr("fill", "none")
+	    .attr("stroke", "currentColor")
+	    .attr("stroke-miterlimit", 1)
+	    .attr("stroke-width", 3)
+        .attr("x", function(d) { return x(d.key); })
+        .attr("y", function(d) { return y(d.precipitacion); })
 
 	})
 }
