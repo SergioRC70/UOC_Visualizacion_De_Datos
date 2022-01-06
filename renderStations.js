@@ -40,7 +40,7 @@ function renderStations(fecha)
 
 					// Dióxido de Azufre SO2
 					if (magnitud == 1) {
-						valor_so2 = valor;
+						valor_so2 = valor + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 100)
 							indice_calidad = Math.max(indice_calidad, 0);
 						else if (valor <= 200)
@@ -55,7 +55,7 @@ function renderStations(fecha)
 
 					// Dióxido de Nitrógeno NO2
 					if (magnitud == 8) {
-						valor_no2 = valor;
+						valor_no2 = valor + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 40)
 							indice_calidad = Math.max(indice_calidad, 0);
 						else if (valor <= 100)
@@ -70,7 +70,7 @@ function renderStations(fecha)
 
 					// Partículas < 2.5 µm PM2.5
 					if (magnitud == 9) {
-						valor_pm25 = valor;
+						valor_pm25 = valor + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 10)
 							indice_calidad = Math.max(indice_calidad, 0);
 						else if (valor <= 20)
@@ -85,7 +85,7 @@ function renderStations(fecha)
 
 					// Partículas < 10 µm PM10
 					if (magnitud == 10) {
-						valor_pm10 = valor;
+						valor_pm10 = valor + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 20)
 							indice_calidad = Math.max(indice_calidad, 0);
 						else if (valor <= 35)
@@ -100,7 +100,7 @@ function renderStations(fecha)
 
 					// Ozono O3
 					if (magnitud == 14) {
-						valor_o3 = valor;
+						valor_o3 = valor + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 100)
 							indice_calidad = Math.max(indice_calidad, 0);
 						else if (valor <= 200)
@@ -115,6 +115,7 @@ function renderStations(fecha)
 
 				});
 
+				// Añadimos el círculo correspondiente a la estación con los datos correspondientes
 				var colorCircle = "#6f6f6f";
 				var aqi_text = "";
 				switch (indice_calidad) {
@@ -141,7 +142,7 @@ function renderStations(fecha)
 				} 
 				var circle = L.circle([latitud, longitud], {radius: 200, color: colorCircle, opacity: 1, fillOpacity: 0.6}).addTo(map);
 
-				circle.bindPopup(new L.popup().setContent('<div class="circlePopup"><b>' + nom_estacion + '</b><br/><b>Indice de calidad:</b> ' + aqi_text + '<br/><b>Di&oacute;xido de Azufre (SO<sub>2</sub>):</b> ' + valor_so2 + '&nbsp;&#956;g/m<sup>3</sup><br/><b>Di&oacute;xido de Nitr&oacute;geno (NO<sub>2</sub>):</b> ' + valor_no2 + '&nbsp;&#956;g/m<sup>3</sup><br/><b>Part&iacute;culas &lt; 2.5 &#956;m (PM2.5):</b> ' + valor_pm25 + '&nbsp;&#956;g/m<sup>3</sup><br/><b>Part&iacute;culas &lt; 10 &#956;m (PM10):</b> ' + valor_pm10 + '&nbsp;&#956;g/m<sup>3</sup><br/><b>Ozono (O<sub>3</sub>):</b> ' + valor_o3 + '&nbsp;&#956;g/m<sup>3</sup></div>'));
+				circle.bindPopup(new L.popup().setContent('<div class="circlePopup"><span class="titulo_estacion">' + nom_estacion + '</span><br/><b>Indice de calidad:</b> ' + aqi_text + '<br/><b>Di&oacute;xido de Azufre (SO<sub>2</sub>):</b> ' + valor_so2 + '<br/><b>Di&oacute;xido de Nitr&oacute;geno (NO<sub>2</sub>):</b> ' + valor_no2 + '<br/><b>Part&iacute;culas &lt; 2.5 &#956;m (PM2.5):</b> ' + valor_pm25 + '<br/><b>Part&iacute;culas &lt; 10 &#956;m (PM10):</b> ' + valor_pm10 + '<br/><b>Ozono (O<sub>3</sub>):</b> ' + valor_o3 + '</div>'));
 
 				circles.push(circle);
 			});
