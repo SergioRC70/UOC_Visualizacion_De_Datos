@@ -37,5 +37,8 @@ body, html {
 }
 .titulo_estacion {
 	font-weight: bold;
+	display: inline-block;
 	font-size: 16px;
+	padding-bottom: 10px;
+	text-decoration: underline;
 }
