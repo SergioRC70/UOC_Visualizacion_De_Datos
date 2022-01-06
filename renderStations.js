@@ -10,7 +10,7 @@ function renderStations(fecha)
 	}
 
 	// Cargamos los datos de los ficheros csv. Lo primero es cargar la estaciones de control
-	d3.dsv(";", "./data/estaciones_control_aire.csv", "text/plain; charset=UTF-8").then(function(data) {
+	d3.dsv(";", "./data/estaciones_control_aire.csv").then(function(data) {
 		data.forEach(function(d) {
 			var latitud = d.LATITUD;
 			var longitud = d.LONGITUD;
