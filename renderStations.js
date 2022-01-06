@@ -247,6 +247,11 @@ function renderTempMonth(mes) {
 	svg.append("g")
 	  .call(d3.axisLeft(y));
 
+	var y2 = d3.scaleLinear()
+	  .domain([0, 1])
+	  .range([height, 0]);
+	svg.append("g").call(d3.axisRight(y2))
+
 	// Bars
 	svg.selectAll("mybar")
 	  .data(nest)
