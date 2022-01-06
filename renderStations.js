@@ -250,7 +250,9 @@ function renderTempMonth(mes) {
 	var y2 = d3.scaleLinear()
 	  .domain([0, 1])
 	  .range([height, 0]);
-	svg.append("g").call(d3.axisRight(y2))
+	svg.append("g")
+	  .attr("transform", "translate(" + width + " ,0)")
+	  .call(d3.axisRight(y2));
 
 	// Bars
 	svg.selectAll("mybar")
