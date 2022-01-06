@@ -248,7 +248,7 @@ function renderTempMonth(mes) {
 	  .call(d3.axisLeft(y));
 
 	var y2 = d3.scaleLinear()
-	  .domain([0, 0.3])
+	  .domain([0, 25])
 	  .range([height, 0]);
 	svg.append("g")
 	  .attr("transform", "translate(" + width + " ,0)")
