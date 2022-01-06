@@ -238,7 +238,7 @@ function renderTempMonth(mes) {
 	  .call(d3.axisBottom(x).tickFormat(""))
 	  .selectAll("text")
 	    //.attr("transform", "translate(-10,0)rotate(-45)")
-	    .style("text-anchor", "end");
+	  .style("text-anchor", "end");
 
 	// Add Y axis
 	var y = d3.scaleLinear()
@@ -264,6 +264,14 @@ function renderTempMonth(mes) {
 	    .attr("width", x.bandwidth())
 	    .attr("height", function(d) { return height - y(d.value); })
 	    .attr("fill", "#69b3a2")
+
+	svg.append("path")
+	  .attr("fill", "none")
+	  .attr("stroke", "currentColor")
+	  .attr("stroke-miterlimit", 1)
+	  .attr("stroke-width", 3)
+      .attr("x", function(d) { return x(d.key); })
+      .attr("y", function(d) { return y(d.precipitacion); })
 
 	})
 }
