@@ -182,7 +182,7 @@ function renderTempMonth(mes) {
 	$("#meteo").append("<br/><br/><b>Temperatura y precipiationes a lo largo del mes:</b><br/><br/>");
 
 	// set the dimensions and margins of the graph
-	const margin = {top: 10, right: 60, bottom: 20, left: 20},
+	const margin = {top: 10, right: 60, bottom: 40, left: 20},
 	    width = 340 - margin.left - margin.right,
 	    height = 250 - margin.top - margin.bottom;
 
