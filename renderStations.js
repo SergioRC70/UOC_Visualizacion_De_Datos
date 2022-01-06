@@ -187,15 +187,13 @@ function renderTempMonth(mes) {
 	    height = 250 - margin.top - margin.bottom;
 
 	// append the svg object to the body of the page
-/*	const svg = d3.select("#meteo")
+	const svg = d3.select("#meteo")
 	  .append("svg")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
-	    .attr("transform", `translate(${margin.left},${margin.top})`);*/
+	    .attr("transform", `translate(${margin.left},${margin.top})`);
 
-	// Parse the Data
-	//d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv").then( function(data) {
 	d3.dsv(";", "./data/meteo21.csv").then(function(data) {
 
 	var filteredData = data.filter(function(row, i) {
@@ -233,7 +231,7 @@ function renderTempMonth(mes) {
 
 
 
-line = d3.line()
+/*line = d3.line()
     .x(d => x(nest.key) + x.bandwidth() / 2)
     .y(d => y2(nest.value))
 
@@ -315,6 +313,8 @@ y2Axis = g => g
       .attr("height", height)
     .append("title")
       .text(d => `${nest.key}
+${nest.precipitacion.toLocaleString("en")} new cars sold
+${nest.value.toLocaleString("en")} mpg average fuel efficiency`);
 
   svg.append("g")
       .call(xAxis);
@@ -326,15 +326,10 @@ y2Axis = g => g
       .call(y2Axis);
 
   return svg.node();
-//}
+//}*/
 
 
-/*	
-/*${nest.precipitacion.toLocaleString("en")} new cars sold
-${nest.value.toLocaleString("en")} mpg average fuel efficiency`);
-
-
-var x = d3.scaleBand()
+	var x = d3.scaleBand()
 	  .range([ 0, width ])
 	  .domain(nest.map(function(d) { return d.key; }))
 	  .padding(0.1);
@@ -362,6 +357,5 @@ var x = d3.scaleBand()
 	    .attr("width", x.bandwidth())
 	    .attr("height", function(d) { return height - y(d.value); })
 	    .attr("fill", "#69b3a2")
-*/
 	}) 
 }
