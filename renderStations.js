@@ -26,11 +26,11 @@ function renderStations(fecha)
 				});
 
 				var indice_calidad = 0;
-				var valor_so2 = 0;
-				var valor_no2 = 0;
-				var valor_pm25 = 0;
-				var valor_pm10 = 0;
-				var valor_o3 = 0;
+				var valor_so2 = "No disponible";
+				var valor_no2 = "No disponible";
+				var valor_pm25 = "No disponible";
+				var valor_pm10 = "No disponible";
+				var valor_o3 = "No disponible";
 
 				filteredData.forEach(function(item) {
 					var magnitud = item.MAGNITUD;
