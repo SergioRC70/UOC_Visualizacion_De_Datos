@@ -274,7 +274,7 @@ function renderTempMonth(mes) {
 	    .attr("stroke-miterlimit", 1)
 	    .attr("stroke-width", 3)
         .attr("x", function(d) { return x(d.key); })
-        .attr("y", function(d) { return y(d.precipitacion); })
+        .attr("y", function(d) { return y(d.value); })
 
 	})
 }
