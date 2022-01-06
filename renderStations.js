@@ -151,8 +151,12 @@ function renderStations(fecha)
 
 	// Cargarmos el fichero con los datos meteorológicos para el año seleccionado
 	var file_name = "./data/meteo" + fecha.getFullYear().toString().substr(-2) + ".csv";
+
+	// Borramos los datos anteriores
 	$("#meteo").empty();
-	$("#meteo").append("<b>Datos meteorol&oacute;gicos</b><br/><br/>");
+
+	// Cargamos la información
+	$("#meteo").append("<b>Datos meteorol&oacute;gicos del día:</b><br/><br/>");
 	d3.dsv(";", file_name).then(function(data) {
 		var myMonth = ("0" + (fecha.getMonth() + 1)).slice(-2);
 
@@ -173,37 +177,40 @@ function renderStations(fecha)
 				$("#meteo").append("<b>Precipitación:</b> " + valor + "<br/>");
 		});
 
+		// Dibujamos las gráficas de la preciptación y temperaturas mensual
 		renderTempMonth(myMonth);
 
 		$("#meteo").slideDown(1000);
 	});
 }
 
-
+// La siguietne función se encarga de dibujar una gráfica que combina las precipiataciones y las
+// temperaturas de un mes que se pasa por parámetro
 function renderTempMonth(mes) {
 	$("#meteo").append("<br/><br/><b>Temperatura y precipiationes a lo largo del mes:</b><br/><br/>");
 
-	// set the dimensions and margins of the graph
+	// Dimensiones del gráfico
 	const margin = {top: 10, right: 60, bottom: 40, left: 20},
-	    width = 340 - margin.left - margin.right,
-	    height = 250 - margin.top - margin.bottom;
+		  width = 340 - margin.left - margin.right,
+		  height = 250 - margin.top - margin.bottom;
 
-	// append the svg object to the body of the page
+	// Añadimos el objeto svg a la página
 	const svg = d3.select("#meteo")
-	  .append("svg")
-	    .attr("width", width + margin.left + margin.right)
-	    .attr("height", height + margin.top + margin.bottom)
-	  .append("g")
-	    .attr("transform", `translate(${margin.left},${margin.top})`);
+		.append("svg")
+			.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+			.attr("transform", `translate(${margin.left},${margin.top})`);
 
-	// Parse the Data
-	//d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv").then( function(data) {
+	// Cargamos el fichero con los datos meteorológicos
 	d3.dsv(";", "./data/meteo21.csv").then(function(data) {
 
 	var filteredData = data.filter(function(row, i) {
 		return row.MES == mes && row.ESTACION == '102' && (row.MAGNITUD == '83' || row.MAGNITUD == '89');
 	});
 
+	// Guardamos los datos en un objeto en forma de tuplas clave, valor temperatura y valor precipitación
+	// la calve será cada uno de los días del mes.
 	var nestTemp = [];
 	var nestPrec = [];
 	var nest = [];
@@ -231,6 +238,7 @@ function renderTempMonth(mes) {
 
 	nest = nestTemp.map((item, i) => Object.assign({}, item, nestPrec[i]));
 
+	// Creamos el eje x
 	var x = d3.scaleBand()
 	  .range([ 0, width ])
 	  .domain(nest.map(function(d) { return d.key; }))
@@ -239,16 +247,16 @@ function renderTempMonth(mes) {
 	  .attr("transform", "translate(0," + height + ")")
 	  .call(d3.axisBottom(x).tickFormat(""))
 	  .selectAll("text")
-	    //.attr("transform", "translate(-10,0)rotate(-45)")
 	  .style("text-anchor", "end");
 
-	// Add Y axis
+	// Eje y de las temperaturas
 	var y = d3.scaleLinear()
 	  .domain([0, 35])
 	  .range([ height, 0]);
 	svg.append("g")
 	  .call(d3.axisLeft(y));
 
+	// Eje y para las precipitaciones
 	var y2 = d3.scaleLinear()
 	  .domain([0, 25])
 	  .range([height, 0]);
@@ -256,7 +264,7 @@ function renderTempMonth(mes) {
 	  .attr("transform", "translate(" + width + " ,0)")
 	  .call(d3.axisRight(y2));
 
-	// Bars
+	// Barras para las precipitaciones
 	svg.selectAll("mybar")
 	  .data(nest)
 	  .enter()
@@ -267,7 +275,7 @@ function renderTempMonth(mes) {
 	    .attr("height", function(d) { return height - y2(d.precipitacion); })
 	    .attr("fill", "#69b3a2")
 
-    // Add the line
+    // Gráfico de líneas para la temperatura
     svg.append("path")
       .datum(nest)
       .attr("fill", "none")
