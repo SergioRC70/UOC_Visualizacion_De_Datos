@@ -255,10 +255,11 @@ function renderTempMonth(mes) {
 	  .call(d3.axisRight(y2));
 
 	// Bars
-	svg.selectAll("mybar")
-	  .data(nest)
-	  .enter()
-	  .append("rect")
+//	svg.selectAll("mybar")
+//	  .data(nest)
+//	  .enter()
+	svg.append("rect")
+		.datum(nest)
 	    .attr("x", function(d) { return x(d.key); })
 	    .attr("y", function(d) { return y(d.value); })
 	    .attr("width", x.bandwidth())
