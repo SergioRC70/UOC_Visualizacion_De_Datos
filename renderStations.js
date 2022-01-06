@@ -170,11 +170,11 @@ function renderStations(fecha)
 			var valor = item['D' + myDay];
 
 			if (magnitud == '81')
-				$("#meteo").append("<b>Velocidad del viento:</b> " + parseInt(valor, 10) + "<br/>");
+				$("#meteo").append("<b>Velocidad del viento:</b> " + parseInt(valor, 10) + " m/s<br/>");
 			else if (magnitud == '83')
-				$("#meteo").append("<b>Temperatura:</b> " + parseInt(valor, 10) + "<br/>");
+				$("#meteo").append("<b>Temperatura:</b> " + parseInt(valor, 10) + " &deg;C<br/>");
 			else if (magnitud == '89')
-				$("#meteo").append("<b>Precipitación:</b> " + parseInt(valor, 10) + "<br/>");
+				$("#meteo").append("<b>Precipitación:</b> " + parseInt(valor, 10) + " l/m<sup>2</sup><br/>");
 		});
 
 		// Dibujamos las gráficas de la preciptación y temperaturas mensual
