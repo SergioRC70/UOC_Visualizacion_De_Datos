@@ -40,7 +40,7 @@ function renderStations(fecha)
 
 					// Dióxido de Azufre SO2
 					if (magnitud == 1) {
-						valor_so2 = valor + '&nbsp;&#956;g/m<sup>3</sup>';
+						valor_so2 = parseInt(valor, 10) + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 100)
 							indice_calidad = Math.max(indice_calidad, 0);
 						else if (valor <= 200)
@@ -55,7 +55,7 @@ function renderStations(fecha)
 
 					// Dióxido de Nitrógeno NO2
 					if (magnitud == 8) {
-						valor_no2 = valor + '&nbsp;&#956;g/m<sup>3</sup>';
+						valor_no2 = parseInt(valor, 10) + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 40)
 							indice_calidad = Math.max(indice_calidad, 0);
 						else if (valor <= 100)
@@ -70,7 +70,7 @@ function renderStations(fecha)
 
 					// Partículas < 2.5 µm PM2.5
 					if (magnitud == 9) {
-						valor_pm25 = valor + '&nbsp;&#956;g/m<sup>3</sup>';
+						valor_pm25 = parseInt(valor, 10) + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 10)
 							indice_calidad = Math.max(indice_calidad, 0);
 						else if (valor <= 20)
@@ -85,7 +85,7 @@ function renderStations(fecha)
 
 					// Partículas < 10 µm PM10
 					if (magnitud == 10) {
-						valor_pm10 = valor + '&nbsp;&#956;g/m<sup>3</sup>';
+						valor_pm10 = parseInt(valor, 10) + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 20)
 							indice_calidad = Math.max(indice_calidad, 0);
 						else if (valor <= 35)
@@ -100,7 +100,7 @@ function renderStations(fecha)
 
 					// Ozono O3
 					if (magnitud == 14) {
-						valor_o3 = valor + '&nbsp;&#956;g/m<sup>3</sup>';
+						valor_o3 = parseInt(valor, 10) + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 100)
 							indice_calidad = Math.max(indice_calidad, 0);
 						else if (valor <= 200)
