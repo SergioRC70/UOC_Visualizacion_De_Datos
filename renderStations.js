@@ -248,7 +248,7 @@ function renderTempMonth(mes) {
 	  .call(d3.axisLeft(y));
 
 	var y2 = d3.scaleLinear()
-	  .domain([0, 25])
+	  .domain([0, 35])
 	  .range([height, 0]);
 	svg.append("g")
 	  .attr("transform", "translate(" + width + " ,0)")
@@ -265,16 +265,16 @@ function renderTempMonth(mes) {
 	    .attr("height", function(d) { return height - y(d.value); })
 	    .attr("fill", "#69b3a2")
 
-	svg.selectAll("mybar")
-	  .data(nest)
-	  .enter()
-	  .append("path")
-	    .attr("fill", "none")
-	    .attr("stroke", "currentColor")
-	    .attr("stroke-miterlimit", 1)
-	    .attr("stroke-width", 3)
-        .attr("x", function(d) { return x(d.key); })
-        .attr("y", function(d) { return y(d.value); })
+    // Add the line
+    svg.append("path")
+      .datum(nest)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.key) })
+        .y(function(d) { return y(d.value) })
+        )
 
 	})
 }
