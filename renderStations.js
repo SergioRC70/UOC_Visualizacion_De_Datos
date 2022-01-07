@@ -187,8 +187,8 @@ function renderStations(fecha)
 	}
 	else {
 		// Borramos los datos anteriores y ocultamos la capa
-		$("#meteo").empty();
 		$("#meteo").slideUp(1000);
+		$("#meteo").empty();
 	}
 }
 

@@ -31,10 +31,32 @@
 				e.preventDefault();
 				$(this).attr("autocomplete", "off");  
 			});
+
+
+			$(function () {
+				$("#dialog").dialog({
+					modal: true,
+					autoOpen: false,
+					title: "jQuery Dialog",
+					width: 300,
+					height: 150
+				});
+				$("#info_icon").click(function () {
+					$('#dialog').dialog('open');
+				});
+			});
+
+
+
 		</script>
 	</head>
 	<body>
-		<a id="SOMEID" class="button" href="#">Delete?</a>
+		<img id="info_icon" class="info_icon" src="img/info_icon.png" alt="Información de la visualización" />
+
+		<div id="dialog" style="display: none" align = "center">
+			This is a jQuery Dialog.
+		</div>
+
 		<div id="map"></div>
 
 		<div id="overlay">
