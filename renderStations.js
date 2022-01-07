@@ -293,6 +293,14 @@ function renderTempMonth(mes) {
 	svg.append("g")
 	  .attr("transform", "translate(" + width + " ,0)")
 	  .call(d3.axisRight(y2));
+	// Etiqueta eje y2
+	svg.append("text")
+		.attr("class", "y label")
+		.attr("text-anchor", "end")
+		.attr("y", 6)
+		.attr("dy", ".75em")
+		.attr("transform", "translate(" + width + " ,0), rotate(-90)")
+		.text("°C");
 
 	// Barras para las precipitaciones
 	svg.selectAll("mybar")
