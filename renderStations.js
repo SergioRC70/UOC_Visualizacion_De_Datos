@@ -185,6 +185,11 @@ function renderStations(fecha)
 			$("#meteo").slideDown(1000);
 		});
 	}
+	else {
+		// Borramos los datos anteriores y ocultamos la capa
+		$("#meteo").empty();
+		$("#meteo").slideUp(1000);
+	}
 }
 
 // La siguietne función se encarga de dibujar una gráfica que combina las precipiataciones y las
