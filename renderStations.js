@@ -267,7 +267,7 @@ function renderTempMonth(mes) {
 	  .padding(0.1);
 	svg.append("g")
 	  .attr("transform", "translate(0," + height + ")")
-	  .call(d3.axisBottom(x).tickFormat(""))
+	  .call(d3.axisBottom(x).ticks(5))
 	  .selectAll("text")
 	  .style("text-anchor", "end");
 
@@ -277,14 +277,6 @@ function renderTempMonth(mes) {
 	  .range([ height, 0]);
 	svg.append("g")
 	  .call(d3.axisLeft(y));
-	// Etiqueta eje y
-	svg.append("text")
-		.attr("class", "y label")
-		.attr("text-anchor", "end")
-		.attr("y", 6)
-		.attr("dy", ".75em")
-		.attr("transform", "rotate(-90)")
-		.text("°C");
 
 	// Eje y para las precipitaciones
 	var y2 = d3.scaleLinear()
@@ -293,14 +285,6 @@ function renderTempMonth(mes) {
 	svg.append("g")
 	  .attr("transform", "translate(" + width + " ,0)")
 	  .call(d3.axisRight(y2));
-	// Etiqueta eje y2
-	svg.append("text")
-		.attr("class", "y label")
-		.attr("text-anchor", "end")
-		.attr("y", 6)
-		.attr("dy", ".75em")
-		.attr("transform", "translate(" + width + " ,0), rotate(-90)")
-		.text("°C");
 
 	// Barras para las precipitaciones
 	svg.selectAll("mybar")
