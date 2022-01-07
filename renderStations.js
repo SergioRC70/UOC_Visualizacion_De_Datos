@@ -49,8 +49,10 @@ function renderStations(fecha)
 							indice_calidad = Math.max(indice_calidad, 2);
 						else if (valor <= 500)
 							indice_calidad = Math.max(indice_calidad, 3);
+						else if (valor <= 750)
+							indice_calidad = Math.max(indice_calidad, 4);
 						else
-							indice_calidad = 4;
+							indice_calidad = 5;
 					}
 
 					// Dióxido de Nitrógeno NO2
@@ -58,14 +60,16 @@ function renderStations(fecha)
 						valor_no2 = parseInt(valor, 10) + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 40)
 							indice_calidad = Math.max(indice_calidad, 0);
-						else if (valor <= 100)
+						else if (valor <= 90)
 							indice_calidad = Math.max(indice_calidad, 1);
-						else if (valor <= 200)
+						else if (valor <= 120)
 							indice_calidad = Math.max(indice_calidad, 2);
-						else if (valor <= 400)
+						else if (valor <= 230)
 							indice_calidad = Math.max(indice_calidad, 3);
+						else if (valor <= 340)
+							indice_calidad = Math.max(indice_calidad, 4);
 						else
-							indice_calidad = 4;
+							indice_calidad = 5;
 					}
 
 					// Partículas < 2.5 µm PM2.5
@@ -79,8 +83,10 @@ function renderStations(fecha)
 							indice_calidad = Math.max(indice_calidad, 2);
 						else if (valor <= 50)
 							indice_calidad = Math.max(indice_calidad, 3);
+						else if (valor <= 75)
+							indice_calidad = Math.max(indice_calidad, 4);
 						else
-							indice_calidad = 4;
+							indice_calidad = 5;
 					}
 
 					// Partículas < 10 µm PM10
@@ -88,29 +94,33 @@ function renderStations(fecha)
 						valor_pm10 = parseInt(valor, 10) + '&nbsp;&#956;g/m<sup>3</sup>';
 						if (valor <= 20)
 							indice_calidad = Math.max(indice_calidad, 0);
-						else if (valor <= 35)
+						else if (valor <= 40)
 							indice_calidad = Math.max(indice_calidad, 1);
 						else if (valor <= 50)
 							indice_calidad = Math.max(indice_calidad, 2);
 						else if (valor <= 100)
 							indice_calidad = Math.max(indice_calidad, 3);
+						else if (valor <= 150)
+							indice_calidad = Math.max(indice_calidad, 4);
 						else
-							indice_calidad = 4;
+							indice_calidad = 5;
 					}
 
 					// Ozono O3
 					if (magnitud == 14) {
 						valor_o3 = parseInt(valor, 10) + '&nbsp;&#956;g/m<sup>3</sup>';
-						if (valor <= 100)
+						if (valor <= 50)
 							indice_calidad = Math.max(indice_calidad, 0);
-						else if (valor <= 200)
+						else if (valor <= 100)
 							indice_calidad = Math.max(indice_calidad, 1);
-						else if (valor <= 350)
+						else if (valor <= 130)
 							indice_calidad = Math.max(indice_calidad, 2);
-						else if (valor <= 500)
+						else if (valor <= 240)
 							indice_calidad = Math.max(indice_calidad, 3);
+						else if (valor <= 380)
+							indice_calidad = Math.max(indice_calidad, 4);
 						else
-							indice_calidad = 4;
+							indice_calidad = 5;
 					}
 
 				});
@@ -121,23 +131,27 @@ function renderStations(fecha)
 				switch (indice_calidad) {
 					case 0:
 						colorCircle = "#50f0e6";
-						aqi_text = "Muy bueno";
+						aqi_text = "Bueno";
 						break;
 					case 1:
 						colorCircle = "#50ccaa";
-						aqi_text = "Bueno";
+						aqi_text = "Razonable";
 						break;
 					case 2:
 						colorCircle = "#f0e641";
-						aqi_text = "Regular";
+						aqi_text = "Moderado";
 						break;
 					case 3:
 						colorCircle = "#ff5050";
 						aqi_text = "Malo";
 						break;
 					case 4:
-						colorCircle = "#7d2181";
+						colorCircle = "#960032";
 						aqi_text = "Muy malo";
+						break;
+					case 5:
+						colorCircle = "#7d2181";
+						aqi_text = "Extremadamente malo";
 						break;
 				} 
 				var circle = L.circle([latitud, longitud], {radius: 200, color: colorCircle, opacity: 1, fillOpacity: 0.6}).addTo(map);
