@@ -212,7 +212,7 @@ function renderTempMonth(mes) {
 	$("#meteo").append("<br/><br/><b>Temperatura y precipiationes a lo largo del mes:</b><br/><br/>");
 
 	// Dimensiones del gráfico
-	const margin = {top: 10, right: 60, bottom: 40, left: 20},
+	const margin = {top: 10, right: 60, bottom: 30, left: 20},
 		  width = 340 - margin.left - margin.right,
 		  height = 250 - margin.top - margin.bottom;
 
@@ -277,6 +277,14 @@ function renderTempMonth(mes) {
 	  .range([ height, 0]);
 	svg.append("g")
 	  .call(d3.axisLeft(y));
+	// Etiqueta eje y
+	svg.append("text")
+		.attr("class", "y label")
+		.attr("text-anchor", "end")
+		.attr("y", 6)
+		.attr("dy", ".75em")
+		.attr("transform", "rotate(-90)")
+		.text("&deg;C");
 
 	// Eje y para las precipitaciones
 	var y2 = d3.scaleLinear()
