@@ -37,9 +37,9 @@
 				$("#dialog").dialog({
 					modal: true,
 					autoOpen: false,
-					title: "jQuery Dialog",
-					width: 300,
-					height: 150
+					title: "Datos históricos de calidad del aire en Madrid",
+					width: 600,
+					height: 550
 				});
 				$("#info_icon").click(function () {
 					$('#dialog').dialog('open');
@@ -53,8 +53,17 @@
 	<body>
 		<img id="info_icon" class="info_icon" src="img/info_icon.png" alt="Información de la visualización" />
 
-		<div id="dialog" style="display: none" align = "center">
-			This is a jQuery Dialog.
+		<div id="dialog" style="display: none">
+			Esta visualización muestra los datos de calidad del aire recogidos en las estaciones de control de la ciudad de Madrid desde el año 2001 hasta el 31 de diciembre de 2021.<br/><br/>
+			Los datos que se muestran has sido obtenidos del portal de datos abiertos del Ayuntamiento de Madrid. En concreto, la visualización muestra información de los siguiente juegos de datos:<br/>
+			<ol>
+				<li>
+					<a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=aecb88a7e2b73410VgnVCM2000000c205a0aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default">Calidad del aire. Datos diarios</a>. Este conjunto de datos nos da la información de los valores de calidad del aire obtenidos por las 24 estaciones remotas automáticas que recogen la información básica para la vigilancia atmosférica. Los valores diarios se obtienen como una media aritmética de los 24 valores horarios de cada día.<br/><br/>
+				</li>
+				<li>
+					<a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=8d7357cec5efa610VgnVCM1000001d4a900aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default">Datos meteorológicos. Datos diarios</a>. Este conjunto de datos nos da la información de las estaciones de control pertenecientes a la red meteorológica municipal. 
+				</li>
+			</ol>
 		</div>
 
 		<div id="map"></div>
