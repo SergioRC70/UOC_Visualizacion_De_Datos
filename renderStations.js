@@ -284,7 +284,7 @@ function renderTempMonth(mes) {
 		.attr("y", 6)
 		.attr("dy", ".75em")
 		.attr("transform", "rotate(-90)")
-		.text("&deg;C");
+		.text("°C");
 
 	// Eje y para las precipitaciones
 	var y2 = d3.scaleLinear()
