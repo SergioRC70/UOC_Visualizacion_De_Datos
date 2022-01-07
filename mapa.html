@@ -24,15 +24,10 @@
 		<script>
 			// Añadimos el datepicker a la capa de selección de día
 			$( function() {
-				$( "#datepicker" ).datepicker({ dateFormat: 'dd-mm-yy' });
+				$("#datepicker").datepicker({ dateFormat: 'dd-mm-yy' });
 			} );
 
-			$('#datepicker').on('click', function(e) {
-				e.preventDefault();
-				$(this).attr("autocomplete", "off");  
-			});
-
-
+			// Ventana modal para mostrar info de la viz
 			$(function () {
 				$("#dialog").dialog({
 					modal: true,
@@ -45,9 +40,6 @@
 					$('#dialog').dialog('open');
 				});
 			});
-
-
-
 		</script>
 	</head>
 	<body>
@@ -167,8 +159,6 @@
 					renderStations(new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
 				}
 			})
-			.on("change", function() {
-			});
 		</script>
 
 	</body>
