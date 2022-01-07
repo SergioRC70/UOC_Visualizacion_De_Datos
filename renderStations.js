@@ -151,39 +151,40 @@ function renderStations(fecha)
 
 	// Sólo tenemos datos meteorológicos a partir del año 2019.
 	// Si el año seleccionado es mayor o igual que el 2019, cargarmos el fichero con los datos
+	if (fecha.getFullYear() >= 2019) {
+		var file_name = "./data/meteo" + fecha.getFullYear().toString().substr(-2) + ".csv";
 
-	var file_name = "./data/meteo" + fecha.getFullYear().toString().substr(-2) + ".csv";
+		// Borramos los datos anteriores
+		$("#meteo").empty();
 
-	// Borramos los datos anteriores
-	$("#meteo").empty();
+		// Cargamos la información
+		$("#meteo").append("<b>Datos meteorol&oacute;gicos del día:</b><br/><br/>");
+		d3.dsv(";", file_name).then(function(data) {
+			var myMonth = ("0" + (fecha.getMonth() + 1)).slice(-2);
 
-	// Cargamos la información
-	$("#meteo").append("<b>Datos meteorol&oacute;gicos del día:</b><br/><br/>");
-	d3.dsv(";", file_name).then(function(data) {
-		var myMonth = ("0" + (fecha.getMonth() + 1)).slice(-2);
+			var filteredData = data.filter(function(row, i) {
+				return row.MES == myMonth && row.ESTACION == '102' && (row.MAGNITUD == '81' || row.MAGNITUD == '83' || row.MAGNITUD == '89');
+			});
 
-		var filteredData = data.filter(function(row, i) {
-			return row.MES == myMonth && row.ESTACION == '102' && (row.MAGNITUD == '81' || row.MAGNITUD == '83' || row.MAGNITUD == '89');
+			filteredData.forEach(function(item) {
+				var magnitud = item.MAGNITUD;
+				var myDay = ("0" + fecha.getDate()).slice(-2);
+				var valor = item['D' + myDay];
+
+				if (magnitud == '81')
+					$("#meteo").append("<b>Velocidad del viento:</b> " + parseInt(valor, 10) + " m/s<br/>");
+				else if (magnitud == '83')
+					$("#meteo").append("<b>Temperatura:</b> " + parseInt(valor, 10) + " &deg;C<br/>");
+				else if (magnitud == '89')
+					$("#meteo").append("<b>Precipitación:</b> " + parseInt(valor, 10) + " l/m<sup>2</sup><br/>");
+			});
+
+			// Dibujamos las gráficas de la preciptación y temperaturas mensual
+			renderTempMonth(myMonth);
+
+			$("#meteo").slideDown(1000);
 		});
-
-		filteredData.forEach(function(item) {
-			var magnitud = item.MAGNITUD;
-			var myDay = ("0" + fecha.getDate()).slice(-2);
-			var valor = item['D' + myDay];
-
-			if (magnitud == '81')
-				$("#meteo").append("<b>Velocidad del viento:</b> " + parseInt(valor, 10) + " m/s<br/>");
-			else if (magnitud == '83')
-				$("#meteo").append("<b>Temperatura:</b> " + parseInt(valor, 10) + " &deg;C<br/>");
-			else if (magnitud == '89')
-				$("#meteo").append("<b>Precipitación:</b> " + parseInt(valor, 10) + " l/m<sup>2</sup><br/>");
-		});
-
-		// Dibujamos las gráficas de la preciptación y temperaturas mensual
-		renderTempMonth(myMonth);
-
-		$("#meteo").slideDown(1000);
-	});
+	}
 }
 
 // La siguietne función se encarga de dibujar una gráfica que combina las precipiataciones y las
