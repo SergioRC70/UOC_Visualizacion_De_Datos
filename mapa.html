@@ -24,7 +24,7 @@
 		<script>
 			// Añadimos el datepicker a la capa de selección de día
 			$( function() {
-				$("#datepicker").datepicker({ dateFormat: 'dd-mm-yy' });
+				$("#datepicker").datepicker.setDefaults( $.datepicker.regional[ "es" ] );
 			} );
 
 			// Ventana modal para mostrar info de la viz
