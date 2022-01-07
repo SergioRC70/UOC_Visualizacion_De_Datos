@@ -214,7 +214,7 @@ function renderTempMonth(mes) {
 	// Dimensiones del gráfico
 	const margin = {top: 10, right: 60, bottom: 30, left: 20},
 		  width = 340 - margin.left - margin.right,
-		  height = 250 - margin.top - margin.bottom;
+		  height = 230 - margin.top - margin.bottom;
 
 	// Añadimos el objeto svg a la página
 	const svg = d3.select("#meteo")
@@ -267,7 +267,7 @@ function renderTempMonth(mes) {
 	  .padding(0.1);
 	svg.append("g")
 	  .attr("transform", "translate(0," + height + ")")
-	  .call(d3.axisBottom(x).ticks(5))
+	  .call(d3.axisBottom(x).tickFormat(""))
 	  .selectAll("text")
 	  .style("text-anchor", "end");
 
