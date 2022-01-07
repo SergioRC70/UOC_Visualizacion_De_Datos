@@ -295,13 +295,13 @@ function renderTempMonth(mes) {
 	    .attr("y", function(d) { return y2(d.precipitacion); })
 	    .attr("width", x.bandwidth())
 	    .attr("height", function(d) { return height - y2(d.precipitacion); })
-	    .attr("fill", "#69b3a2")
+	    .attr("fill", "#5866ff")
 
     // Gráfico de líneas para la temperatura
     svg.append("path")
       .datum(nest)
       .attr("fill", "none")
-      .attr("stroke", "steelblue")
+      .attr("stroke", "#db1f2e")
       .attr("stroke-width", 1.5)
       .attr("d", d3.line()
         .x(function(d) { return x(d.key) })
