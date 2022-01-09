@@ -89,3 +89,8 @@ body, html {
 	background-color: #7d2181;
 	color: white;
 }
+#error_fecha {
+	color: red;
+	display: none;
+	font-weight: bold;
+}
